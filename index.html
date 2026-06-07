@@ -600,6 +600,10 @@
                 <div class="label">Điểm</div>
                 <div class="value" id="cur-score">0</div>
             </div>
+            <div class="score-box" style="border-color: rgba(239,68,68,.4);">
+                <div class="label">Câu sai</div>
+                <div class="value" id="cur-wrong" style="color: var(--red);">0</div>
+            </div>
             <div class="score-box total">
                 <div class="label">Tổng câu</div>
                 <div class="value" id="total-count">250</div>
@@ -3327,7 +3331,9 @@
 
         function updateScore() {
             const score = questions.filter(q => q.checked && q.userAns === q.ans).length;
+            const wrong = questions.filter(q => q.checked && q.userAns !== null && q.userAns !== q.ans).length;
             document.getElementById('cur-score').textContent = score;
+            document.getElementById('cur-wrong').textContent = wrong;
         }
 
         function updateProgress() {
