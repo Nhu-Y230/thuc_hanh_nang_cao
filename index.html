@@ -487,6 +487,41 @@
             color: var(--accent);
         }
 
+        /* Answer reveal button */
+        .q-footer {
+            padding: 0 18px 14px;
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .btn-reveal {
+            font-family: 'Be Vietnam Pro', sans-serif;
+            font-size: 12px;
+            font-weight: 600;
+            padding: 6px 14px;
+            border-radius: 7px;
+            border: 1px solid var(--border);
+            background: var(--surface2);
+            color: var(--muted);
+            cursor: pointer;
+            transition: all .15s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-reveal:hover {
+            border-color: var(--yellow);
+            color: var(--yellow);
+            background: rgba(245, 158, 11, .08);
+        }
+
+        .btn-reveal.revealed {
+            border-color: var(--yellow);
+            color: var(--yellow);
+            background: rgba(245, 158, 11, .1);
+        }
+
         /* Floating check button */
         #fab-check {
             position: fixed;
@@ -623,7 +658,7 @@
     <script>
         const RAW_QUESTIONS = [
             // ---- MODULE 01 ----
-            {
+           {
                 m: 1, q:
                     "Trong Access, Bảng là gì?",
                 opts: [
@@ -3125,6 +3160,8 @@
                     "Biểu thức đại số"],
                 ans: 1
             },
+
+
         ];
 
 
@@ -3194,6 +3231,17 @@
             fb.id = `qfb-${i}`;
             card.appendChild(fb);
 
+            // Footer with reveal button
+            const footer = document.createElement('div');
+            footer.className = 'q-footer';
+            const revealBtn = document.createElement('button');
+            revealBtn.className = 'btn-reveal';
+            revealBtn.id = `reveal-${i}`;
+            revealBtn.innerHTML = `💡 Xem đáp án`;
+            revealBtn.onclick = () => revealAnswer(i);
+            footer.appendChild(revealBtn);
+            card.appendChild(footer);
+
             return card;
         }
 
@@ -3224,7 +3272,7 @@
             });
             const correct = q.userAns === q.ans;
             card.classList.add(correct ? 'answered-correct' : 'answered-wrong');
-            fb.textContent = correct ? '✅ Chính xác!' : `❌ Sai! Đáp án đúng: ${LETTERS[q.ans]}. ${q.opts[q.ans]}`;
+            fb.textContent = correct ? '✅ Chính xác!' : `❌ Sai! Đáp án đúng là: ${LETTERS[q.ans]}. ${q.opts[q.ans]}`;
             fb.className = 'q-feedback show ' + (correct ? 'correct' : 'wrong');
             document.getElementById(`qs-${qi}`).textContent = correct ? '✅' : '❌';
             updateScore();
@@ -3294,6 +3342,42 @@
             document.getElementById('result-banner').classList.remove('show');
             document.getElementById('cur-score').textContent = '0';
             renderAll();
+        }
+
+        function revealAnswer(qi) {
+            const q = questions[qi];
+            const card = document.querySelector(`.q-card[data-idx="${qi}"]`);
+            const opts = card.querySelectorAll('.opt');
+            const btn = document.getElementById(`reveal-${qi}`);
+            const fb = document.getElementById(`qfb-${qi}`);
+
+            // If already checked, do nothing extra
+            if (q.checked) return;
+
+            // Mark as revealed (disable options, highlight correct)
+            opts.forEach((el, idx) => {
+                el.classList.add('disabled');
+                if (idx === q.ans) el.classList.add('show-correct');
+            });
+
+            // Show feedback
+            fb.textContent = `💡 Đáp án đúng: ${LETTERS[q.ans]}. ${q.opts[q.ans]}`;
+            fb.className = 'q-feedback show wrong';
+            fb.style.background = 'rgba(245,158,11,.1)';
+            fb.style.color = 'var(--yellow)';
+            fb.style.borderColor = 'rgba(245,158,11,.3)';
+
+            // Mark question as checked/skipped so it counts
+            q.checked = true;
+            card.classList.add('skipped');
+            document.getElementById(`qs-${qi}`).textContent = '💡';
+
+            btn.innerHTML = `✅ Đã xem`;
+            btn.classList.add('revealed');
+            btn.disabled = true;
+
+            updateScore();
+            updateProgress();
         }
 
         function filterCards(type, btn) {
