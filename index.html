@@ -1,0 +1,3318 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trắc Nghiệm - Môn Thực Hành Nâng Cao</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0f1117;
+            --surface: #1a1d27;
+            --surface2: #22263a;
+            --border: #2e3350;
+            --accent: #4f8ef7;
+            --accent2: #7c3aed;
+            --green: #22c55e;
+            --red: #ef4444;
+            --yellow: #f59e0b;
+            --text: #e2e8f0;
+            --muted: #8892aa;
+            --radius: 12px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Be Vietnam Pro', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        /* HEADER */
+        header {
+            background: linear-gradient(135deg, #1a1d27 0%, #13162a 100%);
+            border-bottom: 1px solid var(--border);
+            padding: 18px 24px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .header-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--accent);
+            letter-spacing: .5px;
+        }
+
+        .header-sub {
+            font-size: 12px;
+            color: var(--muted);
+            margin-top: 2px;
+        }
+
+        .score-board {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .score-box {
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 8px 16px;
+            text-align: center;
+            min-width: 80px;
+        }
+
+        .score-box .label {
+            font-size: 10px;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .score-box .value {
+            font-size: 20px;
+            font-weight: 700;
+            font-family: 'JetBrains Mono';
+            color: var(--accent);
+            margin-top: 2px;
+        }
+
+        .score-box.total .value {
+            color: var(--text);
+        }
+
+        .header-btns {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            font-family: 'Be Vietnam Pro', sans-serif;
+            font-size: 13px;
+            font-weight: 600;
+            padding: 9px 18px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            transition: all .15s;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: #fff;
+        }
+
+        .btn-primary:hover {
+            background: #3d7ef0;
+        }
+
+        .btn-secondary {
+            background: var(--surface2);
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            background: var(--border);
+        }
+
+        .btn-danger {
+            background: var(--accent2);
+            color: #fff;
+        }
+
+        .btn-danger:hover {
+            background: #6d28d9;
+        }
+
+        /* PROGRESS */
+        .progress-wrap {
+            background: var(--surface2);
+            border-bottom: 1px solid var(--border);
+            padding: 10px 24px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .progress-bar-outer {
+            flex: 1;
+            height: 6px;
+            background: var(--border);
+            border-radius: 99px;
+            overflow: hidden;
+        }
+
+        .progress-bar-inner {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent), var(--accent2));
+            border-radius: 99px;
+            transition: width .4s ease;
+            width: 0%;
+        }
+
+        .progress-text {
+            font-size: 12px;
+            color: var(--muted);
+            font-family: 'JetBrains Mono';
+            white-space: nowrap;
+        }
+
+        /* FILTERS */
+        .filter-row {
+            padding: 12px 24px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+            background: var(--surface);
+        }
+
+        .filter-label {
+            font-size: 12px;
+            color: var(--muted);
+            margin-right: 4px;
+        }
+
+        .filter-btn {
+            font-size: 12px;
+            font-weight: 600;
+            padding: 5px 12px;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            background: var(--surface2);
+            color: var(--muted);
+            cursor: pointer;
+            transition: all .15s;
+        }
+
+        .filter-btn.active {
+            background: var(--accent);
+            color: #fff;
+            border-color: var(--accent);
+        }
+
+        .filter-btn:hover:not(.active) {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        /* MAIN */
+        main {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 24px 20px 60px;
+        }
+
+        /* MODULE HEADING */
+        .module-heading {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--accent2);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin: 32px 0 16px;
+            padding: 8px 14px;
+            background: rgba(124, 58, 237, .1);
+            border-left: 3px solid var(--accent2);
+            border-radius: 0 8px 8px 0;
+        }
+
+        .module-heading:first-child {
+            margin-top: 0;
+        }
+
+        /* QUESTION CARD */
+        .q-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            margin-bottom: 16px;
+            overflow: hidden;
+            transition: border-color .2s;
+            position: relative;
+        }
+
+        .q-card.answered-correct {
+            border-color: var(--green);
+        }
+
+        .q-card.answered-wrong {
+            border-color: var(--red);
+        }
+
+        .q-card.skipped {
+            border-color: var(--yellow);
+        }
+
+        .q-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 16px 18px 14px;
+            cursor: pointer;
+        }
+
+        .q-num {
+            font-size: 11px;
+            font-weight: 700;
+            font-family: 'JetBrains Mono';
+            color: var(--accent);
+            background: rgba(79, 142, 247, .1);
+            border: 1px solid rgba(79, 142, 247, .25);
+            border-radius: 6px;
+            padding: 3px 8px;
+            min-width: 52px;
+            text-align: center;
+            flex-shrink: 0;
+        }
+
+        .q-text {
+            font-size: 14px;
+            font-weight: 500;
+            line-height: 1.6;
+            flex: 1;
+        }
+
+        .q-status {
+            flex-shrink: 0;
+            font-size: 18px;
+            margin-top: 1px;
+        }
+
+        .q-options {
+            padding: 0 18px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .opt {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            padding: 10px 14px;
+            border: 1px solid var(--border);
+            border-radius: 9px;
+            cursor: pointer;
+            transition: all .15s;
+            background: var(--surface2);
+        }
+
+        .opt:hover:not(.disabled) {
+            border-color: var(--accent);
+            background: rgba(79, 142, 247, .06);
+        }
+
+        .opt.selected {
+            border-color: var(--accent);
+            background: rgba(79, 142, 247, .12);
+        }
+
+        .opt.correct {
+            border-color: var(--green) !important;
+            background: rgba(34, 197, 94, .1) !important;
+        }
+
+        .opt.wrong {
+            border-color: var(--red) !important;
+            background: rgba(239, 68, 68, .1) !important;
+        }
+
+        .opt.show-correct {
+            border-color: var(--green) !important;
+            background: rgba(34, 197, 94, .07) !important;
+        }
+
+        .opt.disabled {
+            cursor: default;
+        }
+
+        .opt-letter {
+            font-size: 12px;
+            font-weight: 700;
+            font-family: 'JetBrains Mono';
+            width: 22px;
+            height: 22px;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--border);
+            color: var(--text);
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+
+        .opt.selected .opt-letter {
+            background: var(--accent);
+            color: #fff;
+        }
+
+        .opt.correct .opt-letter {
+            background: var(--green);
+            color: #fff;
+        }
+
+        .opt.wrong .opt-letter {
+            background: var(--red);
+            color: #fff;
+        }
+
+        .opt.show-correct .opt-letter {
+            background: var(--green);
+            color: #fff;
+        }
+
+        .opt-text {
+            font-size: 13.5px;
+            line-height: 1.55;
+            flex: 1;
+        }
+
+        .q-feedback {
+            margin: 6px 18px 14px;
+            padding: 8px 14px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            display: none;
+        }
+
+        .q-feedback.show {
+            display: block;
+        }
+
+        .q-feedback.correct {
+            background: rgba(34, 197, 94, .12);
+            color: var(--green);
+            border: 1px solid rgba(34, 197, 94, .3);
+        }
+
+        .q-feedback.wrong {
+            background: rgba(239, 68, 68, .1);
+            color: var(--red);
+            border: 1px solid rgba(239, 68, 68, .25);
+        }
+
+        /* RESULT BANNER */
+        #result-banner {
+            display: none;
+            margin: 24px 0;
+            padding: 28px 28px;
+            background: var(--surface);
+            border: 2px solid var(--border);
+            border-radius: 16px;
+            text-align: center;
+        }
+
+        #result-banner.show {
+            display: block;
+        }
+
+        #result-banner h2 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        #result-banner p {
+            font-size: 15px;
+            color: var(--muted);
+            margin-bottom: 16px;
+        }
+
+        .result-stats {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-top: 12px;
+        }
+
+        .result-stat {
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 14px 24px;
+            text-align: center;
+        }
+
+        .result-stat .rs-val {
+            font-size: 28px;
+            font-weight: 700;
+            font-family: 'JetBrains Mono';
+        }
+
+        .result-stat .rs-label {
+            font-size: 12px;
+            color: var(--muted);
+            margin-top: 4px;
+        }
+
+        .rs-correct .rs-val {
+            color: var(--green);
+        }
+
+        .rs-wrong .rs-val {
+            color: var(--red);
+        }
+
+        .rs-skip .rs-val {
+            color: var(--yellow);
+        }
+
+        .rs-score .rs-val {
+            color: var(--accent);
+        }
+
+        /* Floating check button */
+        #fab-check {
+            position: fixed;
+            bottom: 28px;
+            right: 28px;
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            color: #fff;
+            border: none;
+            border-radius: 50px;
+            padding: 14px 28px;
+            font-size: 14px;
+            font-weight: 700;
+            font-family: 'Be Vietnam Pro', sans-serif;
+            cursor: pointer;
+            box-shadow: 0 8px 32px rgba(79, 142, 247, .35);
+            transition: all .2s;
+            z-index: 200;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        #fab-check:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 40px rgba(79, 142, 247, .45);
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 99px;
+        }
+
+        @media (max-width: 600px) {
+            header {
+                padding: 14px 14px;
+            }
+
+            main {
+                padding: 16px 12px 80px;
+            }
+
+            .q-header {
+                padding: 13px 13px 11px;
+            }
+
+            .q-options {
+                padding: 0 13px 13px;
+            }
+
+            #fab-check {
+                right: 16px;
+                bottom: 16px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div>
+            <div class="header-title">🎓 Trắc Nghiệm – Thực Hành Nâng Cao</div>
+            <div class="header-sub">Module 01: Access &nbsp;|&nbsp; Module 02: SQL Server</div>
+        </div>
+        <div class="score-board">
+            <div class="score-box">
+                <div class="label">Điểm</div>
+                <div class="value" id="cur-score">0</div>
+            </div>
+            <div class="score-box total">
+                <div class="label">Tổng câu</div>
+                <div class="value" id="total-count">250</div>
+            </div>
+            <div class="header-btns">
+                <button class="btn btn-primary" onclick="checkAll()">✅ Kiểm tra tất cả</button>
+                <button class="btn btn-danger" onclick="resetAll()">🔄 Làm mới</button>
+            </div>
+        </div>
+    </header>
+
+    <div class="progress-wrap">
+        <div class="progress-bar-outer">
+            <div class="progress-bar-inner" id="prog-bar"></div>
+        </div>
+        <div class="progress-text" id="prog-text">0 / 250 đã trả lời</div>
+    </div>
+
+    <div class="filter-row">
+        <span class="filter-label">Lọc:</span>
+        <button class="filter-btn active" onclick="filterCards('all',this)">Tất cả</button>
+        <button class="filter-btn" onclick="filterCards('unanswered',this)">Chưa trả lời</button>
+        <button class="filter-btn" onclick="filterCards('correct',this)">Đúng ✅</button>
+        <button class="filter-btn" onclick="filterCards('wrong',this)">Sai ❌</button>
+    </div>
+
+    <main>
+        <div id="result-banner">
+            <h2 id="result-title">Kết quả bài kiểm tra</h2>
+            <p id="result-sub"></p>
+            <div class="result-stats">
+                <div class="result-stat rs-score">
+                    <div class="rs-val" id="rs-score">0</div>
+                    <div class="rs-label">Điểm / 250</div>
+                </div>
+                <div class="result-stat rs-correct">
+                    <div class="rs-val" id="rs-correct">0</div>
+                    <div class="rs-label">Câu đúng</div>
+                </div>
+                <div class="result-stat rs-wrong">
+                    <div class="rs-val" id="rs-wrong">0</div>
+                    <div class="rs-label">Câu sai</div>
+                </div>
+                <div class="result-stat rs-skip">
+                    <div class="rs-val" id="rs-skip">0</div>
+                    <div class="rs-label">Bỏ qua</div>
+                </div>
+            </div>
+            <button class="btn btn-danger" style="margin-top:20px" onclick="resetAll()">🔄 Làm mới</button>
+        </div>
+        <div id="quiz-container"></div>
+    </main>
+
+    <button id="fab-check" onclick="checkAll()">✅ Kiểm tra tất cả</button>
+
+    <script>
+        const RAW_QUESTIONS = [
+            // ---- MODULE 01 ----
+            {
+                m: 1, q:
+                    "Trong Access, Bảng là gì?",
+                opts: [
+                    "Là đối tượng để lưu dữ liệu bao gồm cột (trường) và dòng (bản ghi)",
+                    "Là một đối tượng để hiển thị dữ liệu",
+                    "Là một đối tượng để in và tổng hợp dữ liệu",
+                    "Là một đối tượng chứa công cụ lập trình."],
+                ans: 0
+            },
+            {
+                m: 1, q:
+                    "Tập tin Access 2010 có phần đuôi (phần mở rộng) mặc định là:",
+                opts: [
+                    "docx.",
+                    "accdb",
+                    "dbf.",
+                    "xlsx."],
+                ans: 1
+            },
+            {
+                m: 1, q:
+                    "Cơ sở dữ liệu Access là:",
+                opts: [
+                    "Một tập hợp các bản ghi và các tập tin được tổ chức theo một mục đích nào đó",
+                    "Tập hợp các bảng",
+                    "Tập dữ liệu rời rạc không có quan hệ với nhau",
+                    "Tập các file chứa thông tin liên quan được tổ chức theo một mục đích nào đó"],
+                ans: 3
+            },
+            {
+                m: 1, q:
+                    "Access là một phần mềm:",
+                opts: [
+                    "Độc lập với hệ điều hành, cài đặt riêng",
+                    "Tích hợp luôn trong hệ điều hành Windows của Microsoft",
+                    "Tích hợp trong bộ Microsoft Office",
+                    "Hệ thống"],
+                ans: 2
+            },
+            {
+                m: 1, q:
+                    "Access là:",
+                opts: [
+                    "Một hệ quản trị cơ sở dữ liệu (DBMS)",
+                    "Phần mềm soạn thảo văn bản",
+                    "Phần mềm tính toán",
+                    "Phần mềm trình chiếu"],
+                ans: 0
+            },
+            {
+                m: 1, q:
+                    "Các đối tượng chính trong Access là:",
+                opts: [
+                    "Table, Query, Form, Report",
+                    "Table, Query, Form, Modul",
+                    "Table, Query, Form, Report, Macro",
+                    "Table, Query, Form, Report, Modul, Macro, Page"],
+                ans: 3
+            },
+            {
+                m: 1, q:
+                    "Quan hệ nào không tồn tại giữa hai bảng trong Access?",
+                opts: [
+                    "Quan hệ 1-1",
+                    "Quan hệ 1-n",
+                    "Quan hệ 1-0",
+                    "Quan hệ n-n"],
+                ans: 2
+            },
+            {
+                m: 1, q:
+                    "Khi đã tạo một quan hệ giữa hai bảng, nếu muốn sửa đổi quan hệ cần:",
+                opts: [
+                    "Xóa bỏ bảng đã tạo quan hệ và tạo lại bảng mới",
+                    "Xóa bỏ toản bộ cơ sở dữ liệu và tạo lại",
+                    "Không thể thay đổi được quan hệ khi đã tạo ra",
+                    "Nhắp nút phải vào quan hệ cần thay đổi và chọn Edit Relation ships"],
+                ans: 3
+            },
+            {
+                m: 1, q:
+                    "Để tạo cấu trúc bảng mới, chọn:",
+                opts: [
+                    "Table design",
+                    "Query design",
+                    "Form design",
+                    "Report design"],
+                ans: 0
+            },
+            {
+                m: 1, q:
+                    "Để thoát khỏi Access, dùng:",
+                opts: [
+                    "File/Exit",
+                    "Nhắp vào nút Close(X)",
+                    "Nhấn Alt+F4",
+                    "A, B, C đều đúng"],
+                ans: 3
+            },
+            {
+                m: 1, q:
+                    "Truy vấn (Query) là:",
+                opts: [
+                    "Một đối tượng được trích rút từ bảng theo một yêu cầu xác định",
+                    "Một đối tượng để hiển thị dữ liệu",
+                    "Một đối tượng thiết kế in dữ liệu",
+                    "Đối tượng chứa các thủ tục lập trình"],
+                ans: 0
+            },
+            {
+                m: 1, q:
+                    "Toán tử * đại diện cho:",
+                opts: [
+                    "Đại diện cho 1 ký tự bất kỳ",
+                    "Đại diện cho 1 ký tự số",
+                    "Đại diện cho 1 ký tự chuỗi",
+                    "Đại diện cho 1 xâu ký tự có độ dài bất kỳ"],
+                ans: 3
+            },
+            {
+                m: 1, q:
+                    "Để tạo biểu mẫu nhập liệu (Form) mới, chọn:",
+                opts: [
+                    "Table design",
+                    "Query design",
+                    "Form design",
+                    "Report design"],
+                ans: 2
+            },
+            {
+                m: 1, q:
+                    "Để tạo mới một mẫu báo cáo, chọn:",
+                opts: [
+                    "Table design",
+                    "Query design",
+                    "Form design",
+                    "Report design"],
+                ans: 3
+            },
+            {
+                m: 1, q:
+                    "Thuộc tính nào của MainForm cho phép tạo mối liên kết dữ liệu đúng với SubForm:",
+                opts: [
+                    "Link SubForm và Link MainForm",
+                    "Relationship SubForm và Relationship MainForm",
+                    "Link Child Field và Link Master Field",
+                    "Casecade Relate Field"],
+                ans: 2
+            },
+            {
+                m: 1, q:
+                    "Dữ liệu của một trường có kiểu là AutoNumber:",
+                opts: [
+                    "Luôn luôn tăng",
+                    "Luôn luôn giảm",
+                    "Access sẽ tự động tăng tuần tự hoặc ngẫu nhiên khi một mẫu tin mới được tạo",
+                    "Tùy ý người sử dụng"],
+                ans: 0
+            },
+            {
+                m: 1, q:
+                    "Tổng số Field trong một Table:",
+                opts: [
+                    "64",
+                    "255",
+                    "256",
+                    "Không giới hạn"],
+                ans: 0
+            },
+            {
+                m: 1, q:
+                    "Khi tạo truy vấn, muốn sắp xếp dữ liệu theo chiều tăng hoặc giảm thì trong vùng lưới ta chọn ở mục:",
+                opts: [
+                    "Index",
+                    "Index and Sort",
+                    "Sort",
+                    "Show"],
+                ans: 2
+            },
+            {
+                m: 1, q:
+                    "Thiết lập mối quan hệ giữa các bảng là để:",
+                opts: [
+                    "Sao chép thông tin giữa các bảng",
+                    "Loại bỏ thông tin trùng nhau giữa 2 bảng",
+                    "Di chuyển thông tin giữa các bảng",
+                    "Truy nhập đúng dữ liệu giữa các bảng có quan hệ với nhau"],
+                ans: 3
+            },
+            {
+                m: 1, q:
+                    "Trong cùng một cột có thể nhập tối đa bao nhiêu loại dữ liệu?",
+                opts: [
+                    "1",
+                    "2",
+                    "3",
+                    "4"],
+                ans: 0
+            },
+            {
+                m: 1, q:
+                    "Một khóa chính phải có các điều kiện:",
+                opts: [
+                    "Có giá trị duy nhất (không trùng nhau)",
+                    "Không được rỗng",
+                    "Xác định duy nhất một mẫu tin",
+                    "Có giá trị duy nhất (không trùng nhau); không được rỗng; xác định duy nhất một mẫu tin"],
+                ans: 3
+            },
+            {
+                m: 1, q:
+                    "Khi tạo một Form bằng chế độ Design view, thì có thể lấy dữ liệu từ:",
+                opts: [
+                    "Một Table hoặc một Query",
+                    "Một hoặc nhiều Query",
+                    "Một Table và nhiều Query",
+                    "Nhiều Table và nhiều Query"],
+                ans: 3
+            },
+            {
+                m: 1, q:
+                    "Khi chọn một trường trong một bảng làm khóa chính thì thuộc tính REQUIRED của trường đó phải chọn là:",
+                opts: [
+                    "YES",
+                    "NO",
+                    "Tùy ý",
+                    "A, B, C đều đúng"],
+                ans: 0
+            },
+            {
+                m: 1, q:
+                    "Khi muốn thiết lập quan hệ (Relationship) giữa hai bảng thì mỗi bảng phải:",
+                opts: [
+                    "Có ít nhất một mẫu tin",
+                    "Có ít nhất ba trường",
+                    "Có chung ít nhất một trường",
+                    "A, B, C đều đúng"],
+                ans: 2
+            },
+            {
+                m: 1, q:
+                    "Mặt nạ nhập liệu (Input Mask) dùng để:",
+                opts: [
+                    "Định dạng dữ liệu",
+                    "Che chắn dữ liệu",
+                    "Qui định khuôn mẫu để nhập dữ liệu",
+                    "Bảo vệ dữ liệu trong bảng"],
+                ans: 2
+            },
+            {
+                m: 1, q:
+                    "Thuộc tính Validation Rule dùng để làm gì?",
+                opts: [
+                    "Thông báo lỗi khi nhập dữ liệu không hợp lệ",
+                    "Kiểm tra tính hợp lệ của dữ liệu",
+                    "Qui định khoá chính",
+                    "Qui định dữ liệu của Field"],
+                ans: 1
+            },
+            {
+                m: 1, q:
+                    "Để lấy dữ liệu từ bảng \"Phatsinh\" thêm vào cuối bảng \"Chungtu\", ta dùng:",
+                opts: [
+                    "Update Query",
+                    "Make-Table Query",
+                    "Append Query",
+                    "Select Query"],
+                ans: 2
+            },
+            {
+                m: 1, q:
+                    "Qui định nhập kiểu Text tự động đổi thành chữ thường sử dụng mã Fomat là:",
+                opts: [
+                    ">",
+                    "<",
+                    "@",
+                    "&"],
+                ans: 1
+            },
+            {
+                m: 1, q:
+                    "Qui định dữ liệu nhập chỉ được phép là các chữ cái từ A đến Z hoặc ký số từ 0 đến 9 và bắt buộc phải nhập vào, ta sử dụng ký hiệu trong phần khai báo Input Mask là:",
+                opts: [
+                    "?",
+                    "<",
+                    "A",
+                    "a"],
+                ans: 2
+            },
+            {
+                m: 1, q:
+                    "Phần thập phân của dữ liệu kiểu Long Interger có thể chứa tối đa:",
+                opts: [
+                    "1 chữ số",
+                    "7 chữ số",
+                    "15 chữ số",
+                    "0 chữ số"],
+                ans: 3
+            },
+            {
+                m: 1, q:
+                    "Quan hệ giữa hai bảng trong cơ sở dữ liệu Access có thể là:",
+                opts: [
+                    "Quan hệ một – nhiều",
+                    "Quan hệ nhiều – một",
+                    "Quan hệ một - một",
+                    "Quan hệ một – nhiều, quan hệ một – một"],
+                ans: 3
+            },
+            {
+                m: 1, q:
+                    "Qui định dữ liệu nhập kiểu ngày có dạng dd/mm/yyyy chọn Format là:",
+                opts: [
+                    "Short Date",
+                    "Medium Date",
+                    "Long Date",
+                    "General"],
+                ans: 0
+            },
+            {
+                m: 1, q:
+                    "Biết trường DIEM có kiểu Number, chỉ nhận các giá trị từ 0 đến 10, hãy chọn thuộc tính Validation Rule của trường DIEM.",
+                opts: [
+                    ">0 or <=10",
+                    ">=0 and <=10",
+                    "<0 and >10",
+                    ">= 0 or <= 10"],
+                ans: 1
+            },
+            {
+                m: 1, q:
+                    "SubReport là gì?",
+                opts: [
+                    "Một Report nhỏ luôn nằm góc dưới màn hình",
+                    "Một Report được kích hoạt ngay khi một Report khác được kích hoạt",
+                    "Một Report nhỏ được kích hoạt bởi một Report khác",
+                    "Một Report nhỏ được nhúng bên trong một Report khác"],
+                ans: 3
+            },
+            {
+                m: 1, q:
+                    "Tại sao phải khai báo kích thước cho mỗi trường?",
+                opts: [
+                    "Để giúp hệ thống kiểm tra tính đúng đắn khi nhập dữ liệu",
+                    "Để có thể tính kích thước của bản ghi (bộ dữ liệu) và xác định vị trí các trường trong bản ghi",
+                    "Để hệ thống dự trữ vùng nhớ phục vụ ghi dữ liệu",
+                    "A, B, C đều đúng"],
+                ans: 3
+            },
+            {
+                m: 1, q:
+                    "Trong Form \"BIEUMAU\" có một Textbox có thuộc tính Name là KH, từ một đối tượng bất kỳ, muốn truy cập đến Textbox này, ta chọn:",
+                opts: [
+                    "[BIEUMAU]![Form].[KH]",
+                    "[Form].[KH]",
+                    "[Forms]![BIEUMAU]![KH]",
+                    "[Forms]![BIEUMAU].[KH]"],
+                ans: 2
+            },
+            {
+                m: 1, q:
+                    "Khi tạo ra các bảng trong cơ sở dữ liệu Access thì ta nên thực hiện theo trình tự sau:",
+                opts: [
+                    "Tạo liên kết, tạo khóa chính, nhập liệu",
+                    "Tạo khóa chính, tạo liên kết, nhập liệu",
+                    "Tạo khóa chính, nhập liệu, tạo liên kết",
+                    "Nhập liệu, tạo khóa chính, liên kết"],
+                ans: 1
+            },
+            {
+                m: 1, q:
+                    "Khóa ngoại là:",
+                opts: [
+                    "Một hoặc nhiều trường trong một bảng và tham chiếu đến trường của bảng khác",
+                    "Một mẫu tin đặc biệt",
+                    "Không là khóa chính của bảng nào hết",
+                    "A, B, C đều đúng"],
+                ans: 0
+            },
+            {
+                m: 1, q:
+                    "Trong một truy vấn ta phải chọn ít nhất bao nhiêu Table?",
+                opts: [
+                    "0",
+                    "1",
+                    "2",
+                    "3"],
+                ans: 1
+            },
+            {
+                m: 1, q:
+                    "Một biểu mẫu (Form) ta có thể nhóm dữ liệu tối đa theo bao nhiêu nhóm?",
+                opts: [
+                    "1",
+                    "2",
+                    "3",
+                    "Không có"],
+                ans: 3
+            },
+            {
+                m: 1, q:
+                    "Khi sử dụng công cụ Form Wizard để tạo một Form, ta có thể chọn bao nhiêu dạng trình bày của Form?",
+                opts: [
+                    "2",
+                    "3",
+                    "8",
+                    "Nhiều hơn nữa"],
+                ans: 2
+            },
+            {
+                m: 1, q:
+                    "Bảng LoaiHang có quan hệ 1-n với bảng HangHoA. Khi nhập dữ liệu ta phải:",
+                opts: [
+                    "Nhập dữ liệu cho bảng LoaiHang trước, rồi sau đó mới nhập dữ liệu cho bảng HangHoa",
+                    "Nhập dữ liệu cho bảng HangHoa trước, rồi sau đó mới nhập cho bảng LoaiHang",
+                    "Nhập dữ liệu cho bảng HangHoa trước, rồi sau đó mới nhập cho bảng LoaiHang",
+                    "Phải xoá hết dữ liệu trong bảng LoaiHang trước khi nhập cho bảng HangHoa"],
+                ans: 0
+            },
+            {
+                m: 1, q:
+                    "Trong quá trình thiết lập quan hệ giữa các bảng, để kiểm tra ràng buộc toàn vẹn về phụ thuộc tồn tại thì ta chọn mục:",
+                opts: [
+                    "Enforce Referential Integrity",
+                    "Cascade Update Related Fields",
+                    "Cascade Delete Related Record",
+                    "Primary Key"],
+                ans: 0
+            },
+            {
+                m: 1, q:
+                    "Để tạo nút lệnh (Command Button) trong Form, ta phải đặt nó trong vùng nào?",
+                opts: [
+                    "Form Header",
+                    "Form Footer",
+                    "Detail",
+                    "Tuỳ ý"],
+                ans: 3
+            },
+            {
+                m: 1, q:
+                    "Biết trường NGAY có kiểu Date/Time, muốn chọn giá trị mặc định cho ngày hiện hành của máy tính và chỉ nhận giá trị trong năm 2021 (dạng DD/MM/YY) thì ta chọn cặp thuộc tính nào để thoả tính chất trên trong các câu sau?",
+                opts: [
+                    "Default Value: Date() và Validation Rule: Year([NGAY])= 21",
+                    "Default Value: Today() và Validation Rule: Year([NGAY])=21",
+                    "Default Value: Date() và Validation Rule: >= #01/01/2021# and <= #31/12/2021#",
+                    "Required: Date() và Validation Rule: >= #01/01/2021# and <= #31/12/2021#"],
+                ans: 2
+            },
+            {
+                m: 1, q:
+                    "Khẳng định nào sau đây sai?",
+                opts: [
+                    "Tên trường (Field) có tối đa 64 ký tự",
+                    "Trong một Table có thể có 2 trường trùng nhau",
+                    "Tên trường có thể có ký tự &",
+                    "Tên trường có thể có ký tự"],
+                ans: 1
+            },
+            {
+                m: 1, q:
+                    "Giả sử hai bảng có quan hệ 1-n với nhau, muốn xóa mẫu tin trên bảng cha (bảng 1) sao cho các mẫu tin có quan hệ ở bảng con (bảng n) cũng tự động xóa theo, thì trong liên kết (Relationship) của hai bảng này ta chọn:",
+                opts: [
+                    "Cascade Update Related Fields",
+                    "Enforce Referential Integrity",
+                    "Không thể thực hiện được",
+                    "Cascade Delete Related Records"],
+                ans: 3
+            },
+            {
+                m: 1, q:
+                    "Để tạo nút lệnh (Command Button) bằng Wizard cho phép thêm mẫu tin mới, ta chọn loại hành động nào sau đây?",
+                opts: [
+                    "Record Operations, Add New Record",
+                    "Record Navigation, New Record",
+                    "Record Navigation, Add New Record",
+                    "Go to Record, New"],
+                ans: 0
+            },
+            {
+                m: 1, q:
+                    "Trong Data Type, kiểu dữ liệu Short Text là:",
+                opts: [
+                    "Kiểu ký tự có chiều dài tối đa 255 ký tự",
+                    "Kiểu ký tự có chiều dài tối đa 256 ký tự",
+                    "Kiểu ký tự có chiều dài không xác định",
+                    "Kiểu ký tự có chiều dài tối đa 1024 ký tự"],
+                ans: 0
+            },
+            {
+                m: 1, q:
+                    "Hoạt động nào sau đây có sử dụng CSDL?",
+                opts: [
+                    "Bán hàng",
+                    "Bán vé máy bay",
+                    "Quản lý học sinh trong nhà trường",
+                    "A, B, C đều đúng"],
+                ans: 3
+            },
+            {
+                m: 1, q:
+                    "Khi nhập liệu cho Table thì Field được gọi là khoá chính (Primary key):",
+                opts: [
+                    "Cho phép để trống",
+                    "Bắt buộc phải nhập",
+                    "Cho phép trùng giữa các Record trong cùng Table đó",
+                    "Chỉ cho phép kiểu Text"],
+                ans: 1
+            },
+            {
+                m: 1, q:
+                    "Chọn kiểu dữ liệu nào cho truờng điểm Toán, Lý?",
+                opts: [
+                    "Number",
+                    "Yes/No",
+                    "Currency",
+                    "AutoNumber"],
+                ans: 0
+            },
+            {
+                m: 1, q:
+                    "Khi chọn kiểu dữ liệu cho trường thành tiền (bắt buộc kèm theo đơn vị tiền tệ), nên chọn loại nào?",
+                opts: [
+                    "Number",
+                    "Text",
+                    "Currency",
+                    "Date/time"],
+                ans: 2
+            },
+            {
+                m: 1, q:
+                    "Khi chọn dữ liệu cho các trường chỉ chứa một trong hai giá trị như trường GioiTinh, trường đơn đặt hàng đã hoặc chưa giải quyết...nên chọn kiểu dữ liệu nào để sau này nhập dữ liệu cho nhanh?",
+                opts: [
+                    "Text",
+                    "Number",
+                    "Yes/No",
+                    "Auto Number"],
+                ans: 2
+            },
+            {
+                m: 1, q:
+                    "Tính chất Field size của trường kiểu Text dùng để:",
+                opts: [
+                    "Định dạng ký tự gõ vào trong cột",
+                    "Qui định số cột chứa số lẻ",
+                    "Ấn định số ký tự tối đa chứa trong trường đó",
+                    "Đặt tên nhãn cho cột"],
+                ans: 2
+            },
+            {
+                m: 1, q:
+                    "Kiểu dữ liệu nào là tốt nhất cho một trường lưu trữ ngày sinh?",
+                opts: [
+                    "Text",
+                    "Number",
+                    "AutoNumber",
+                    "Date/Time"],
+                ans: 3
+            },
+            {
+                m: 1, q:
+                    "Để chỉ định một trường là khóa chính, ta chọn trường đó rồi bấm vào nút:",
+                opts: [
+                    "First Key",
+                    "Single key",
+                    "Primary Key",
+                    "Unique Key"],
+                ans: 2
+            },
+            {
+                m: 1, q:
+                    "Muốn xóa liên kết giữa hai bảng, trong cửa sổ Relationships ta thực hiện:",
+                opts: [
+                    "Chọn hai bảng và bấm phím Delete",
+                    "Chọn đường liên kết giữa hai bảng đó và bấm phím Delete",
+                    "Chọn tất cả các bảng và bấm phím Delete",
+                    "A, B, C đều sai"],
+                ans: 1
+            },
+            {
+                m: 1, q:
+                    "Muốn tổng hợp dữ liệu theo chủng loại (tổng số, số lượng, trị trung bình, …). Ta sử dụng:",
+                opts: [
+                    "Update Query",
+                    "CrossTab Query",
+                    "Make Table Query",
+                    "Deleta Query"],
+                ans: 1
+            },
+            {
+                m: 1, q:
+                    "Trong cửa sổ thiết kế Query, ta muốn đưa thêm một điều kiện vào Query đó thì điều kiện này phải ghi vào dòng:",
+                opts: [
+                    "Show",
+                    "Sort",
+                    "Criteria",
+                    "Total"],
+                ans: 2
+            },
+            {
+                m: 1, q:
+                    "Trong cửa sổ Design View của Query, Muốn nhóm thành từng nhóm các mẫu tin có dữ liệu trùng nhau ta sử dụng dòng nào dưới đây?",
+                opts: [
+                    "Total: Sum",
+                    "Total: Count",
+                    "Total: Group by",
+                    "Total: Avg"],
+                ans: 2
+            },
+            {
+                m: 1, q:
+                    "Trong cửa sổ thiết kế Query, Để hiện hay ẩn một cột khi chạy Query ta phải sử dụng dòng nào?",
+                opts: [
+                    "Show",
+                    "Sort",
+                    "Criteria",
+                    "Total"],
+                ans: 0
+            },
+            {
+                m: 1, q:
+                    "Đối với Query có tham số cần nhập thì:",
+                opts: [
+                    "Đặt tham số vào 2 ngoặc vuông [ ] trong dòng Criteria",
+                    "Đặt tham số vào 2 ngoặc tròn () trong dòng Criteria",
+                    "Đặt tham số vào 2 nháy kép \" \" trong dòng Criteria",
+                    "Đặt tham số vào 2 nháy đơn ' ' trong dòng Criteria"],
+                ans: 0
+            },
+            {
+                m: 1, q:
+                    "Muốn xem kết quả của 1 Query ta thực hiện như thế nào?",
+                opts: [
+                    "Trong cửa sổ Cơ sở dữ liệu, Chọn tên Query chọn nút Open",
+                    "Trong cửa sổ thiết kế Query chọn Biểu tượng View",
+                    "Click Biểu tượng Run Trong cửa sổ thiết kế Query",
+                    "A, B, C đều đúng"],
+                ans: 3
+            },
+            {
+                m: 1, q:
+                    "Để hiển thị thông tin các nhân viên có ngày sinh trước ngày 15/10/1970 gồm MaNv,HoNV, TenNV,NgaySinh. Đặt điều kiện ở field NgaySinh là:",
+                opts: [
+                    ">\"15/10/1970\"",
+                    ">=#15/10/1970#",
+                    "<\"15/10/1970\"",
+                    "<#15/10/1970#"],
+                ans: 3
+            },
+            {
+                m: 1, q:
+                    "Để hiển thị thông tin các nhân viên có họ là “Nguyễn” gồm MaNv, HoNV, phải đặt điều kiện tại field HoNV (chứa họ và chữ lót của tên nhân viên) là:",
+                opts: [
+                    "Like \"Nguyễn?\"",
+                    "Like \"Nguyễn *\"",
+                    "Like \"*Nguyễn\"",
+                    "Like 'Nguyễn*'"],
+                ans: 1
+            },
+            {
+                m: 1, q:
+                    "Giả sử trong Table DIEM có các trường: Mot_tiet, Hoc_ky. Để tìm những học sinh có điểm một tiết trên 7 và điểm thi học kỳ trên 5, trong dòng Criteria của trường HOC_KY, biểu thức điều kiện nào sau đây là đúng?",
+                opts: [
+                    "[Mot_Tiet] > 7 AND [Hoc_Ky]>5",
+                    "Mot_Tiet > 7 AND Hoc_Ky >5",
+                    "[Mot_Tiet] > 7 OR [Hoc_Ky]>5",
+                    "[Mot_Tiet] >\"7\" AND [Hoc_Ky]>\"5\""],
+                ans: 0
+            },
+            {
+                m: 1, q:
+                    "Nếu phái của sinh viên là yes, ghi \"nam\", ngược lại ghi \"nữ\". Chúng ta thực hiện như sau:",
+                opts: [
+                    "IIF([PHAI]=Yes,\"NAM\",\"NỮ\")",
+                    "IF PHAI=Yes THEN \"NAM\" ELSE \"NỮ\"",
+                    "IF(\"[PHAI]=Yes\",\"NAM\",\"NỮ\")",
+                    "IFF(\"[PHAI]=Yes\";\"NAM\";\"NỮ\")"],
+                ans: 0
+            },
+            {
+                m: 1, q:
+                    "Để có kết quả sắp xếp theo thứ tự mã phòng ban (MaPB) tăng dần và mã số (Maso) giảm dần, trong truy vấn Query ta chọn:",
+                opts: [
+                    "Sort: Dùng Ascending cho MaPB và Descending cho Maso",
+                    "Sort: Dùng Ascending cho MaPB và Ascending cho Maso",
+                    "Sort: Dùng Descending cho Maso và Descending MaPB",
+                    "Sort: Dùng Ascending cho Maso và Descending MaPB"],
+                ans: 0
+            },
+            {
+                m: 1, q:
+                    "Giả sử có Table Nhanvien(MaNV, MaDonVi, HoTen, MucLuong). Để tính BHXH = 5% MucLuong, ta lập field tính toán như sau:",
+                opts: [
+                    "BHXH: 0.05*[MucLuong]",
+                    "BHXH: 0.95*[MucLuong]",
+                    "BHXH=5%[MucLuong]",
+                    "BHXH: 0.5*[MucLuong]"],
+                ans: 0
+            },
+            {
+                m: 1, q:
+                    "Giả sử có Table NHANVIEN gồm các field: MaNV, MaDonVi, HoTen, MucLuong. Thống kê mức lương cao nhất của từng đơn vị, các hàm cần dùng:",
+                opts: [
+                    "Groupby cho trường MaDonVi, Sum cho trường MucLuong",
+                    "Groupby cho trường MaDonVi, Min cho trường MucLuong",
+                    "Groupby cho trường MaDonVi, Max cho trường MucLuong",
+                    "Groupby cho trường MaDonVi, Avg cho trường MucLuong"],
+                ans: 2
+            },
+            {
+                m: 1, q:
+                    "Form được thiết kế nhằm:",
+                opts: [
+                    "Hiển thị dữ liệu trong bảng dưới dạng thuận tiện để xem, nhập và sửa dữ liệu",
+                    "Sử dụng các thao tác thông qua nút lệnh",
+                    "Thay đổi cấu trúc của bảng nguồn",
+                    "Thay đổi kiểu dữ liệu của các trường trong bảng nguồn"],
+                ans: 0
+            },
+            {
+                m: 1, q:
+                    "Để ẩn một Control trên Form ta dùng thuộc tính nào",
+                opts: [
+                    "Visiable = No",
+                    "Locked = Yes",
+                    "Enable = No",
+                    "A, B, C đều sai"],
+                ans: 0
+            },
+            {
+                m: 1, q:
+                    "Chế độ làm việc với đối tượng Form có thể là:",
+                opts: [
+                    "Print Preview",
+                    "Design View",
+                    "Tabel View",
+                    "A, B, C đều đúng"],
+                ans: 1
+            },
+            {
+                m: 1, q:
+                    "Để gắn 1 Textbox trên Form với 1 field của Table, ta dùng thuộc tính gì của Textbox?",
+                opts: [
+                    "Fortmat",
+                    "Input mask",
+                    "Control Source",
+                    "Row Source"],
+                ans: 2
+            },
+            {
+                m: 1, q:
+                    "Một Auto Report chỉ dùng để tạo một Report liên quan đến:",
+                opts: [
+                    "Một Table hay một Query duy nhất",
+                    "Nhiều Table",
+                    "Nhiều Query",
+                    "Phải kết hợp từ nhiều Table và Query"],
+                ans: 0
+            },
+            {
+                m: 1, q:
+                    "Khi tiến hành tạo Report, bước quan trọng nhất là?",
+                opts: [
+                    "Chọn trường để sắp xếp",
+                    "Chọn kiểu trình bày báo cáo",
+                    "Chọn nguồn dữ liệu",
+                    "Chọn trường để phân nhóm"],
+                ans: 2
+            },
+            {
+                m: 1, q:
+                    "Trong cửa sổ thiết kế Report, công thức tính tổng kết của mỗi nhóm phải nhập vào phần:",
+                opts: [
+                    "Page Footer",
+                    "Page Header",
+                    "Detail",
+                    "Group Footer"],
+                ans: 3
+            },
+            {
+                m: 1, q:
+                    "Các báo cáo lấy thông tin hiển thị từ các đối tượng cơ sở dữ liệu nào?",
+                opts: [
+                    "Từ Form và Table",
+                    "Từ Table và Report",
+                    "Từ Query và Table",
+                    "Từ Query và Report"],
+                ans: 2
+            },
+            {
+                m: 1, q:
+                    "Report có các thành phần cơ bản:",
+                opts: [
+                    "Report Header, Report Footer, Detail",
+                    "Report Header, Report Footer, Detail, Page Header, Page Footer, có thể có thêmcác thành phần Group.",
+                    "Page Header, Page Footer, Detail",
+                    "Report Header, Report Footer, Detail, Page Header, Page Footer"],
+                ans: 1
+            },
+            {
+                m: 1, q:
+                    "Để tự thiết kế Report mà không dùng mẫu có sẵn ta nên chọn lệnh nào sau đây?",
+                opts: [
+                    "Report Wizard",
+                    "Report Design",
+                    "AutoReport: Columnar",
+                    "AutoReport: Tabular"],
+                ans: 1
+            },
+            {
+                m: 1, q:
+                    "Đối tượng Report trong hệ quản trị cơ sở dữ liệu Access có thể dùng để làm gì?",
+                opts: [
+                    "Chỉnh sửa dữ liệu",
+                    "Tổng hợp dữ liệu",
+                    "Nhập dữ liệu",
+                    "Sửa cấu trúc bảng"],
+                ans: 1
+            },
+            {
+                m: 1, q:
+                    "Trong công đoạn sửa đỗi thiết kế Report ta không thể làm việc gì?",
+                opts: [
+                    "Thay đổi kích thước trường",
+                    "Thay đổi kiểu dữ liệu của trường",
+                    "Di chuyển các trường",
+                    "Thay đổi nội dung các tiêu đề"],
+                ans: 1
+            },
+            {
+                m: 1, q:
+                    "Trong thiết kế Report có mấy hướng in trang giấy?",
+                opts: [
+                    "1",
+                    "2",
+                    "3",
+                    "4"],
+                ans: 1
+            },
+            {
+                m: 1, q:
+                    "Để sắp xếp các trường theo thứ tự giảm dần trong việc thiết kế Report, chọn:",
+                opts: [
+                    "Descending",
+                    "Ascending",
+                    "Criteria",
+                    "Group by"],
+                ans: 0
+            },
+            {
+                m: 1, q:
+                    "Để tạo Report cần trả lời các câu hỏi nào?",
+                opts: [
+                    "Dữ liệu từ những Table, Query nào sẽ được đưa vào Report",
+                    "Dữ liệu sẽ được nhóm như thế nào",
+                    "Report được tạo ra đề kết xuất thông tin gì",
+                    "A, B, C đều đúng"],
+                ans: 3
+            },
+            {
+                m: 1, q:
+                    "Trong Textbox muốn hiển thị kết quả một biểu thức. Giả sử tính tổng một biểu thức:",
+                opts: [
+                    "Sum[Giatri]",
+                    "=Sum[Giatri]",
+                    "Sum(Giatri)",
+                    "= Sum!Giatri"],
+                ans: 1
+            },
+            {
+                m: 1, q:
+                    "Để đánh số trang trong Report người ta gõ vào thuộc tính Control Source của Textbox:",
+                opts: [
+                    "Page",
+                    "= [Page]",
+                    "Pages",
+                    "[Page]"],
+                ans: 1
+            },
+            {
+                m: 1, q:
+                    "Để định dạng màu chữ ta của Text box hoặc Label trong Controls ta dùng gì?",
+                opts: [
+                    "Background Color",
+                    "Border Color",
+                    "Font Color",
+                    "Fill Color"],
+                ans: 2
+            },
+            {
+                m: 1, q:
+                    "Trên 1 label ta có thể đưa vào:",
+                opts: [
+                    "1 hàm tự do",
+                    "1 dòng văn bản",
+                    "1 hàm của Access",
+                    "1 hình ảnh"],
+                ans: 1
+            },
+            {
+                m: 1, q:
+                    "Sau khi thiết kế bảng, nếu ta không chọn khóa cho bảng thì:",
+                opts: [
+                    "Access tự động tạo khóa chính cho bảng",
+                    "Access không cho lưu",
+                    "Access không cho nhập dữ liệu",
+                    "Thoát khỏi Access."],
+                ans: 0
+            },
+            {
+                m: 1, q:
+                    "Khi làm việc với cấu trúc bảng, để xác định kiểu dữ liệu của trường, ta xác định tên kiểu dữ liệu tại cột:",
+                opts: [
+                    "Data Type",
+                    "Description",
+                    "Field Type",
+                    "Field Properties"],
+                ans: 0
+            },
+            {
+                m: 1, q:
+                    "Trường nào có thể khai báo kiểu dữ liệu Auto number trong các trường sau đây?",
+                opts: [
+                    "Điểm toán",
+                    "Ngày sinh",
+                    "Số thứ tự",
+                    "Điểm trung bình"],
+                ans: 2
+            },
+            {
+                m: 1, q:
+                    "Giả sử các giá trị của trường MAHH có chiều dài đúng 4 ký tự, 2 ký tự đầu là BC. Ta ghi trong Validation Rule như thế nào gọi là hợp lệ?",
+                opts: [
+                    "\"LIKE BC*\"",
+                    "\"LIKE BC??\"",
+                    "LIKE \"BC??\"",
+                    "A, B, C đều sai"],
+                ans: 2
+            },
+            {
+                m: 1, q:
+                    "Dữ liệu trên Table sau khi xóa xong sẽ như thế nào?",
+                opts: [
+                    "Có thể phục hồi lại được",
+                    "Không thể phục hồi lại được",
+                    "Nằm trong Recycle Bin của máy tính",
+                    "A, B, C đều sai"],
+                ans: 1
+            },
+            {
+                m: 1, q:
+                    "Kiểu chuỗi với độ dài cố định, viết được dấu Tiếng Việt là kiểu dữ liệu nào?",
+                opts: [
+                    "char(n)",
+                    "varchar(n)",
+                    "nchar(n)",
+                    "nvarchar(n)"],
+                ans: 2
+            },
+            {
+                m: 1, q:
+                    "Tên trường trong truy vấn phải để trong dấu nào?",
+                opts: [
+                    "[ ]",
+                    "{ }",
+                    "<>",
+                    "()"],
+                ans: 0
+            },
+            {
+                m: 1, q:
+                    "Report có thể thiết kế làm việc ở chế độ sau:",
+                opts: [
+                    "DataSheet view",
+                    "Design View",
+                    "Report View",
+                    "A, B, C trên đúng"],
+                ans: 1
+            },
+            {
+                m: 1, q:
+                    "Để khoá một TextBox trên Form không cho người dùng nhập vào Text Box đó, ta sử dụng thuộc tính gì của TextBox?",
+                opts: [
+                    "Thuộc tính Locked",
+                    "Thuộc tính Input Mask",
+                    "Thuộc tính Filter Lookup",
+                    "Thuộc tính Format"],
+                ans: 0
+            },
+            {
+                m: 1, q:
+                    "Kiểu dữ liệu không sử dụng trong Access?",
+                opts: [
+                    "Float",
+                    "Yes/ No",
+                    "Hyperlink",
+                    "Currency"],
+                ans: 0
+            },
+            {
+                m: 1, q:
+                    "Muốn phóng to vùng soạn thảo công thức (Expression Builder) trong khung lưới Querry sử sụng phím tắt nào sau đây?",
+                opts: [
+                    "F2",
+                    "Alt + F2",
+                    "Shift + F2",
+                    "Ctrl + F2"],
+                ans: 2
+            },
+            {
+                m: 1, q:
+                    "Hàm DATE() có ý nghĩa:",
+                opts: [
+                    "Trả về ngày tháng hiện tại",
+                    "Trả về ngày tháng hiện tại của hệ thống",
+                    "Trả về ngày hiện tại",
+                    "Trả về ngày giờ hiện tại của hệ thống"],
+                ans: 1
+            },
+            {
+                m: 1, q:
+                    "Hàm NOW() có ý nghĩa",
+                opts: [
+                    "Trả về ngày giờ hiện tại",
+                    "Trả về ngày giờ hiện tại của hệ thống",
+                    "Trả về ngày hiện tại",
+                    "Trả về ngày tháng hiện tại của hệ thống"],
+                ans: 1
+            },
+            {
+                m: 1, q:
+                    "Xác định các yếu tố trong truy vấn chéo (Crosstab Query)?",
+                opts: [
+                    "Tiêu đề cột (Column Heading), Tiêu đề dòng (Row Heading), Giá trị (Value)",
+                    "Tiêu đề dòng (Column Heading), Tiêu đề cột (Row Heading), Giá trị (Value)",
+                    "Giá trị (Column Heading), Tiêu đề cột (Row Heading), Tiêu đề dòng (Value)",
+                    "Giá trị (Column Heading), Tiêu đề dòng (Row Heading), Tiêu đề cột (Value)"],
+                ans: 0
+            },
+            {
+                m: 1, q:
+                    "Chức năng Filter by Form dùng để:",
+                opts: [
+                    "Lọc các mẫu tin theo cột có giá trị khác nhau",
+                    "Lọc theo các lựa chọn khác",
+                    "Lọc các mẫu tin nâng cao",
+                    "Lọc theo biểu mẫu"],
+                ans: 3
+            },
+            {
+                m: 1, q:
+                    "Có 3 bảng với các khóa chính DanhSach (SoBD) DiemThi (SoBD) ChiTietDT (DTDuThi). Thực hiện kết nối nào sau đây là đúng?",
+                opts: [
+                    "DanhSach (SoBD,1) → DiemThi (SoBD,1) và ChiTietDT (DTDuThi,1) → DanhSach (DTDuThi,∞)",
+                    "DanhSach (SoBD,1) → DiemThi (SoBD,1) → ChiTietDT (DTDuThi,1)",
+                    "DanhSach (SoBD,∞) → DiemThi (SoBD,1) và ChiTietDT (DTDuThi,∞) → DanhSach (DTDuThi,1)",
+                    "DiemThi (SoBD,1) → DanhSach (SoBD,1) → ChiTietDT (DTDuThi,1)"],
+                ans: 0
+            },
+            {
+                m: 1, q:
+                    "Toán tử Mod là gì?",
+                opts: [
+                    "Phép chia lấy phần nguyên",
+                    "Phép chia lấy phần dư",
+                    "Phép cộng chuỗi",
+                    "Phép trừ hai số nguyên"],
+                ans: 1
+            },
+            {
+                m: 1, q:
+                    "Muốn tính tuổi của một người. Thực hiện biểu thức nào sau đây?",
+                opts: [
+                    "Year(Now()) – Year([NgaySinh])",
+                    "Year(Today()) – Year([NgaySinh])",
+                    "Year(Date()) – Year([NgaySinh])",
+                    "Year(Year(Now())) – Year([NgaySinh])"],
+                ans: 0
+            },
+            {
+                m: 1, q:
+                    "Muốn ghép trường HoLot và Ten. Có thể thực hiện biểu thức nào sau đây?",
+                opts: [
+                    "[Holot] & \" \" & [Ten]",
+                    "[HoSV]+\"\"+[TenSV]",
+                    "[Holot] & [Ten]",
+                    "A, B, C đều đúng"],
+                ans: 3
+            },
+            {
+                m: 1, q:
+                    "Bổ sung thêm một trường mới vào Design Form:",
+                opts: [
+                    "Chọn menu Design/Add Existing Fields",
+                    "Chọn menu Creat/Add Existing Fields",
+                    "Chọn menu Home/Add Existing Fields",
+                    "Chọn menu Insert/Add Existing Fields"],
+                ans: 0
+            },
+            {
+                m: 1, q:
+                    "Parameter Query là:",
+                opts: [
+                    "Truy vấn chéo",
+                    "Truy vấn lựa chọn",
+                    "Truy vấn tham số",
+                    "Truy vấn tổng"],
+                ans: 2
+            },
+            {
+                m: 1, q:
+                    "Để hiển thị hộp thoại Enter Parameter có dòng thông báo \"Nhap vao noi sinh\" của truy vấn tham số thì tại dòng Criteria trong khung lưới của QBE ta gõ:",
+                opts: [
+                    "{Nhap vao noi sinh}",
+                    "[Nhap vao noi sinh]",
+                    "#Nhap vao noi sinh#",
+                    "(Nhap vao noi sinh)"],
+                ans: 1
+            },
+            {
+                m: 1, q:
+                    "Cho CSDL NhanVien(MaNV,HoTen,GioiTinh, NgaySinh, MaPB);PhongBan(MaPB,TenPB); ChiTiet(MaNV, ChucVu, Luong). Thực hiện kết nối nào sau đây là đúng?",
+                opts: [
+                    "PhongBan (MaPB, 1)→ NhanVien (MaPB,∞) và NhanVien (MaNV, 1) → ChiTiet (MaNV, 1)",
+                    "PhongBan (MaPB,∞) → NhanVien (MaPB,1) và NhanVien (MaNV,∞) → ChiTiet (MaNV,1)",
+                    "PhongBan (MaPB,1) → NhanVien (MaPB,1) và NhanVien (MaNV,1) → ChiTiet (MaNV,1)",
+                    "PhongBan (MaPB,∞) → NhanVien (MaPB,∞) và NhanVien (MaNV,∞) → ChiTiet (MaNV,∞)"],
+                ans: 0
+            },
+            {
+                m: 1, q:
+                    "Cho CSDL HocSinh(SoBD, HoTen, Lop); Lop(Lop, GVCN); Diem(SoBD, Toan, Van, NN). Thực hiện kết nối nào sau đây là đúng?",
+                opts: [
+                    "DIEM (SoBD,1) → HOCSINH (SoBD,∞) → LOP (Lop,1)",
+                    "HOCSINH (SoBD,1) → DIEM (SoBD,1) và LOP (Lop,1) → HOCSINH (Lop,∞)",
+                    "HOCSINH (SoBD,1) → DIEM (SoBD,∞) và LOP (Lop,1) → DIEM (SoBD,∞)",
+                    "DIEM (SoBD,∞) → DIEM (SoBD,1) và DIEM (SoBD,1) → HOCSINH (Lop,∞)"],
+                ans: 1
+            },
+            {
+                m: 1, q:
+                    "Trong Access: biểu thức nào sau đây đúng với yêu cầu: nếu DiemTB >= 5.0, ghi \"Dau\", ngược lại ghi \"Rot\"?",
+                opts: [
+                    "iif([DiemTB]>= 5.0, \"Dau\", \"Rot\")",
+                    "iif(DiemTB>= 5.0, [Dau], [Rot])",
+                    "iif(DiemTB>= 5.0, (Dau), (Rot))",
+                    "iif(DiemTB>= 5.0, \"Dau\", \"Rot\")"],
+                ans: 0
+            },
+            {
+                m: 1, q:
+                    "Trong Report thì ý nghĩa của LinkMasterFields là gì?",
+                opts: [
+                    "Liên kết của báo cáo phụ",
+                    "Liên kết của báo cáo chính",
+                    "Liên kết mở rộng",
+                    "Liên kết tới Form"],
+                ans: 1
+            },
+            {
+                m: 1, q:
+                    "Trong Report thì ý nghĩa của LinkChildFields là gì?",
+                opts: [
+                    "Liên kết của báo cáo phụ",
+                    "Liên kết của báo cáo chính",
+                    "Liên kết mở rộng",
+                    "Liên kết tới Form"],
+                ans: 0
+            },
+            {
+                m: 1, q:
+                    "Để tạo nút lệnh đi đến bản ghi \"kế tiếp\" trên Form, tại vùng design Form ta thực hiện:",
+                opts: [
+                    "Click lên công cụ Control/Use Control Wizards /Button/Go Last Record/ Next/ Next/ Finish",
+                    "Click lên công cụ Control/Use Control Wizards /Button/Go Next Record/ Next/ Next/ Finish",
+                    "Click lên công cụ Control/Use Control Wizards /Button/Go First Record/ Next/ Next/ Finish",
+                    "Click lên công cụ Control/Use Control Wizards /Button/Go Previous Record/ Next/ Next/ Finish"],
+                ans: 1
+            },
+            {
+                m: 1, q:
+                    "Để tạo nút lệnh đi đến bản ghi \"Cuối cùng\" trên Form, tại vùng design Form ta thực hiện:",
+                opts: [
+                    "Click lên công cụ Control/Use Control Wizards /Button/Go Last Record/ Next/ Next/ Finish",
+                    "Click lên công cụ Control/Use Control Wizards /Button/Go Next Record/ Next/ Next/ Finish",
+                    "Click lên công cụ Control/Use Control Wizards /Button/Go First Record/ Next/ Next/ Finish",
+                    "Click lên công cụ Control/Use Control Wizards /Button/Go Previous Record/ Next/ Next/ Finish"],
+                ans: 0
+            },
+            {
+                m: 1, q:
+                    "Để tạo nút lệnh đi đến bản ghi \"Đầu tiên\" trên Form, tại vùng design Form ta thực hiện:",
+                opts: [
+                    "Click lên công cụ Control/Use Control Wizards /Button/Go Last Record/ Next/ Next/ Finish",
+                    "Click lên công cụ Control/Use Control Wizards /Button/Go Next Record/ Next/ Next/ Finish",
+                    "Click lên công cụ Control/Use Control Wizards /Button/Go First Record/ Next/ Next/ Finish",
+                    "Click lên công cụ Control/Use Control Wizards /Button/Go Previous Record/ Next/ Next/ Finish"],
+                ans: 2
+            },
+            {
+                m: 1, q:
+                    "Để tạo nút lệnh đi đến bản ghi \"Trước\" trên Form, tại vùng design Form ta thực hiện:",
+                opts: [
+                    "Click lên công cụ Control/Use Control Wizards /Button/Go Last Record/ Next/ Next/ Finish",
+                    "Click lên công cụ Control/Use Control Wizards /Button/Go Next Record/ Next/ Next/ Finish",
+                    "Click lên công cụ Control/Use Control Wizards /Button/Go First Record/ Next/ Next/ Finish",
+                    "Click lên công cụ Control/Use Control Wizards /Button/Go Previous Record/ Next/ Next/ Finish"],
+                ans: 3
+            },
+            {
+                m: 1, q:
+                    "Ý nghĩa của chức năng nút lệnh Add New Record trong bảng điều khiển thi hành lệnh (Record Operation) trong thiết kế Form:",
+                opts: [
+                    "Thêm 1 bản ghi mới",
+                    "Xóa 1 bản ghi",
+                    "Lưu sửa đổi bản ghi",
+                    "Hủy bỏ thao tác sửa đổi"],
+                ans: 0
+            },
+            {
+                m: 1, q:
+                    "Để tạo nút lệnh (Command Button) bằng Wizard cho phép hủy bỏ thao tác sửa đổi, ta chọn loại hành động nào sau đây?",
+                opts: [
+                    "Record Operations, Undo Record",
+                    "Record Navigation, Undo Record",
+                    "Record Navigation, Refresh",
+                    "Go to Record, Delete"],
+                ans: 0
+            },
+            {
+                m: 1, q:
+                    "Để tạo nút lệnh (Command Button) bằng Wizard cho phép xóa một bản ghi, ta chọn loại hành động nào sau đây?",
+                opts: [
+                    "Record Navigation, Delete Record",
+                    "Record Operations, Delete Record",
+                    "Record Navigation, Remove",
+                    "Go to Record, Cut"],
+                ans: 1
+            },
+
+            // ---- MODULE 02 ----
+            {
+                m: 2, q:
+                    "Lệnh nào dùng để sửa dữ liệu trong một cột sau khi đã nhập liệu vào bảng trong CSDL?",
+                opts: [
+                    "Alter table <tên bảng>; add column <tên cột; kiểu dữ liệu>",
+                    "Alter table <tên bảng>; alter column <tên cột; kiểu dữ liệu>",
+                    "Update table <tên bảng> add column <tên cột> <kiểu dữ liệu>",
+                    "Update table <tên bảng> Where <biểu thức điều kiện>"],
+                ans: 3
+            },
+            {
+                m: 2, q:
+                    "Lệnh tạo CSDL có tên Qlsinhvien là:",
+                opts: [
+                    "Create database QLSINHVIEN",
+                    "New database Qlsinhvien",
+                    "Add database Qlsinhvien",
+                    "Create Qlsinhvien"],
+                ans: 0
+            },
+            {
+                m: 2, q:
+                    "Để cho phép một thuộc tính trong bảng được phép để trống khi nhập, ta dùng lệnh nào?",
+                opts: [
+                    "<tên thuộc tính> <kiểu dữ liệu> allow null",
+                    "<tên thuộc tính> <kiểu dữ liệu> not null",
+                    "<tên thuộc tính> <kiểu dữ liệu> null",
+                    "<tên thuộc tính> <kiểu dữ liệu>"],
+                ans: 2
+            },
+            {
+                m: 2, q:
+                    "Muốn lọc theo điều kiện trong một nhóm ta phải sử dụng mệnh đề nào?",
+                opts: [
+                    "Select From Where Group by",
+                    "Select From Group by",
+                    "Select From Where",
+                    "Select From Group by Having"],
+                ans: 3
+            },
+            {
+                m: 2, q:
+                    "Cho biết kết quả câu truy vấn sau: Select * From Nhanvien, Phongban Where Maphg=maphg and Phai='Nu' and tenphong='Tai chinh'",
+                opts: [
+                    "Danh sách nhân viên nữ trong phòng Tài chính",
+                    "Câu truy vấn báo lỗi Ambiguous Maphg",
+                    "Câu truy vấn báo lỗi Invalid columm name Maphg",
+                    "Danh sách các nhân viên nữ trong công ty"],
+                ans: 1
+            },
+            {
+                m: 2, q:
+                    "Lệnh cập nhật giảm 10% đơn giá của tất cả các mặt hàng là:",
+                opts: [
+                    "UPDATE Products SET UnitPrice = 10 Percent UnitPrice",
+                    "UPDATE Products SET UnitPrice = UnitPrice - (UnitPrice * 0.1)",
+                    "UPDATE Products SET UnitPrice = UnitPrice * 0.9 WHERE ProductID IS NOT NULL",
+                    "UPDATE Products SET UnitPrice = UnitPrice * 0.9 WHERE ProductID = 10"],
+                ans: 2
+            },
+            {
+                m: 2, q:
+                    "Khi thực thi câu truy vấn, lỗi Ambiguous xảy ra khi nào?",
+                opts: [
+                    "Viết sai tên bảng",
+                    "Có 2 bảng trùng tên trong mệnh đề From",
+                    "Có một thuộc tính bị trùng lặp tại Select và Where",
+                    "Là lỗi trong quá trình lấy ra một thuộc tính nhưng thuộc tính này tồn tại trong 2 bảng đang sử dụng bằng liên kết khóa ngoại"],
+                ans: 3
+            },
+            {
+                m: 2, q:
+                    "Câu truy vấn lấy danh sách các sinh viên có họ Nguyễn là:",
+                opts: [
+                    "Select * From Sinhvien Where hoten='Nguyễn'",
+                    "Select * From Sinhvien Where hoten like 'Nguyễn'",
+                    "Select * From Sinhvien Where hoten like 'Nguyễn%'",
+                    "Select * From Sinhvien Where hoten like '%Nguyễn%'"],
+                ans: 2
+            },
+            {
+                m: 2, q:
+                    "Câu lệnh nào sau đây là đúng?",
+                opts: [
+                    "Hoten = hoNV + ';' + tenlot + ';'+ tennv",
+                    "'Hoten' = 'hoNV' + '' + tenlot' +''+'tennv'",
+                    "hoNV + '' + tenlot + ''+ tennv as hoten",
+                    "hoNV + '' + tenlot +''+ tennv as 'hoten'"],
+                ans: 3
+            },
+            {
+                m: 2, q:
+                    "Cho biết kết quả câu truy vấn sau: Select MaNV, Luong*1.1 as 'Lương tăng thêm' From Nhanvien",
+                opts: [
+                    "In ra danh sách MaNV và lương nhân viên",
+                    "In ra danh sách nhân viên tăng lương 10% và cập nhật lại lương",
+                    "Câu truy vấn báo lỗi không tính toán tại Select được",
+                    "In ra MaNV, Lương tăng thêm của các nhân viên trong công ty"],
+                ans: 3
+            },
+            {
+                m: 2, q:
+                    "Cho biết kết quả câu truy vấn sau: Select malop, tenlop, count(masv) From Lop join Sinhvien on malop=lop Group by Malop",
+                opts: [
+                    "Danh sách lớp và sĩ số của từng lớp",
+                    "Lỗi khi kết 2 bảng Lop và Sinhvien không đặt tên bí danh",
+                    "Lỗi do mệnh đề Group by thiếu thuộc tính tenlop",
+                    "Lỗi do count không thực hiện được ở Select"],
+                ans: 2
+            },
+            {
+                m: 2, q:
+                    "Câu truy vấn tính trung bình điểm thi lần 1 các môn học của sinh viên là:",
+                opts: [
+                    "Select SV.Masv, hoten, average(diemlan1) From sinhvien SV, diemthi D, monhoc M Where SV.masv=D.masv and D.mamh=M.mamh Group by SV.masv, hoten",
+                    "Select SV.Masv, hoten, sum(diemlan1*dvht)/dvht From sinhvien SV, diemthi D, monhoc M Where SV.masv=D.masv and D.mamh=M.mamh Group by SV.masv, hoten",
+                    "Select SV.Masv, hoten, sum(diemlan1*dvht)/sum(dvht)From sinhvien SV,diemthi D, monhoc MWhere SV.masv=D.masv and D.mamh=M.mamhGroup by SV.masv,hotenD. Select SV.Masv,hoten, sum(diemlan1*dvht)/sum(dvht)From sinhvien SV,diemthi D, monhoc MWhere SV.masv=D.masv and D.mamh=M.mamhGroup by SV.masv,D.mamh=M.mamhGroup by SV.masv,hoten",
+                    "Select SV.Masv, hoten, sum(diemlan1) From sinhvien SV, diemthi D Where SV.masv=D.masv Group by SV.masv, hoten"],
+                ans: 2
+            },
+            {
+                m: 2, q:
+                    "Mệnh đề nào luôn có trong câu truy vấn?",
+                opts: [
+                    "Select và From",
+                    "Select và Where",
+                    "Select, From và Where",
+                    "From và Where"],
+                ans: 0
+            },
+            {
+                m: 2, q:
+                    "Để loại bỏ những dòng giống nhau trong SQL ta dùng:",
+                opts: [
+                    "Distint",
+                    "Distinct",
+                    "Remove",
+                    "Revoke"],
+                ans: 1
+            },
+            {
+                m: 2, q:
+                    "Xác định toán tử nào cho phép chọn 1 giá trị phù hợp với 1 trong các giá trị của một danh sách:",
+                opts: [
+                    "IN",
+                    "AND",
+                    "OR",
+                    "NOT"],
+                ans: 0
+            },
+            {
+                m: 2, q:
+                    "Sử dụng lệnh Select với tùy chọn nào để giới hạn số hàng được trả về?",
+                opts: [
+                    "Với mệnh đề WHERE",
+                    "Với mệnh đề GROUP BY",
+                    "Với mệnh đề TOP",
+                    "Với từ khoá DISTINCT"],
+                ans: 2
+            },
+            {
+                m: 2, q:
+                    "Lệnh nào sau đây dùng để hiển thị 10 hàng đầu tiên trong bảng Titles",
+                opts: [
+                    "SELECT * FROM Titles WHERE count(*) = 10",
+                    "SELECT count(10) FROM Titles",
+                    "SELECT TOP(10) FROM Titles",
+                    "SELECT TOP 10 * FROM Titles"],
+                ans: 3
+            },
+            {
+                m: 2, q:
+                    "Trong câu lệnh INSERT, từ khoá DEFAULT được sử dụng trong mệnh đề VALUES được dùng với mục đích gì?",
+                opts: [
+                    "Định nghĩa một giá trị default cho một cột",
+                    "Chỉ định lệnh được sử dụng giá trị Default nhập vào cho một cột",
+                    "Chỉ định lệnh được sử dụng giá trị Default để nhập cho tất cả các cột",
+                    "Chỉ định lệnh được sử dụng giá trị Default để nhập cho một cột nếu cột chấp nhận trị NULL"],
+                ans: 0
+            },
+            {
+                m: 2, q:
+                    "Giá trị các thành phần của khoá thì:",
+                opts: [
+                    "Có thể nhận giá trị null hay các giá trị không xác định",
+                    "Không thể nhận giá trị null hay các giá trị không xác định.",
+                    "Có thể nhận giá trị các giá trị không xác định.",
+                    "Không thể nhận giá trị null và chấp nhận các giá trị không xác định"],
+                ans: 1
+            },
+            {
+                m: 2, q:
+                    "Câu lệnh Create table dùng để làm gì?",
+                opts: [
+                    "Thêm, xóa, sửa 1 cột trong table",
+                    "Tạo một CSDL mới",
+                    "Tạo một bảng trong CSDL",
+                    "Xóa một bảng trong CSDL"],
+                ans: 2
+            },
+            {
+                m: 2, q:
+                    "RDBMS là từ viết tắt của:",
+                opts: [
+                    "Relational DataBase Manipulation System",
+                    "Reliable DataBase Management System",
+                    "Relational DataBook Management System",
+                    "Relational DataBase Management System"],
+                ans: 3
+            },
+            {
+                m: 2, q:
+                    "Lệnh DROP DATABASE dùng để:",
+                opts: [
+                    "Tạo một CSDL",
+                    "Xóa một CSDL",
+                    "Chỉnh sửa một CSDL",
+                    "A, B, C đều sai"],
+                ans: 1
+            },
+            {
+                m: 2, q:
+                    "Lệnh ALTER TABLE dùng để:",
+                opts: [
+                    "Xóa 1 bảng trong CSDL",
+                    "Tạo 1 bảng trong CSDL",
+                    "Thêm, xóa, chỉnh sửa một cột đã tồn tại trong bảng",
+                    "A, B, C đều sai"],
+                ans: 2
+            },
+            {
+                m: 2, q:
+                    "Lệnh DROP TABLE dùng để:",
+                opts: [
+                    "Tạo 1 bảng trong CSDL",
+                    "Xóa 1 bảng trong CSDL",
+                    "Thêm, xóa, chỉnh sửa một cột đã tồn tại trong bảng",
+                    "Chỉnh sửa 1 bảng trong CSDL"],
+                ans: 1
+            },
+            {
+                m: 2, q:
+                    "Lệnh CREATE DATABASE dùng để:",
+                opts: [
+                    "Tạo 1 CSDL mới",
+                    "Xóa 1 bảng trong CSDL",
+                    "Thêm, xóa, chỉnh sửa một cột đã tồn tại trong bảng",
+                    "Tạo 1 bảng trong CSDL"],
+                ans: 0
+            },
+            {
+                m: 2, q:
+                    "Lệnh SELECT DISTINCT dùng để:",
+                opts: [
+                    "Chỉ trả về những giá trị khác nhau của cột",
+                    "Cập nhật những mẫu tin đã có trong bảng",
+                    "Tạo ra một bảng sao lưu dự phòng",
+                    "Chọn lọc dữ liệu từ một CSDL"],
+                ans: 0
+            },
+            {
+                m: 2, q:
+                    "Lệnh INSERT INTO dùng để:",
+                opts: [
+                    "Cập nhật những mẫu tin đã có trong bảng",
+                    "Thêm một mẫu tin mới vào bảng",
+                    "Chọn lọc dữ liệu từ một CSDL",
+                    "Thêm, xóa, chỉnh sửa một cột đã tồn tại trong bảng"],
+                ans: 1
+            },
+            {
+                m: 2, q:
+                    "Lệnh UPDATE dùng để",
+                opts: [
+                    "Cập nhật những mẫu tin đã có trong bảng",
+                    "Thêm một mẫu tin mới vào bảng",
+                    "Thêm, xóa, chỉnh sửa một cột đã tồn tại trong bảng",
+                    "A, B, C đều đúng"],
+                ans: 0
+            },
+            {
+                m: 2, q:
+                    "Lệnh DELETE dùng để:",
+                opts: [
+                    "Xóa một mẫu tin trong bảng",
+                    "Cập nhật những mẫu tin đã có trong bảng",
+                    "Xóa 1 bảng trong CSDL",
+                    "A, B, C đều đúng"],
+                ans: 0
+            },
+            {
+                m: 2, q:
+                    "Mệnh đề ORDER BY dùng để:",
+                opts: [
+                    "Sắp xếp dữ liệu kết quả theo thiết lập của một cột cụ thể",
+                    "Sắp xếp dữ liệu một cách ngẫu nhiên",
+                    "Sắp xếp dữ liệu theo chiều tăng dần",
+                    "A, B, C đều sai"],
+                ans: 0
+            },
+            {
+                m: 2, q:
+                    "Mệnh đề WHERE dùng để:",
+                opts: [
+                    "Trích ra những mẫu tin thỏa điều kiện",
+                    "Sắp xếp dữ liệu kết quả theo thiết lập của một cột cụ thể",
+                    "Sắp xếp dữ liệu một cách ngẫu nhiên",
+                    "A, B, C đều đúng"],
+                ans: 0
+            },
+            {
+                m: 2, q:
+                    "Toán tử AND sẽ hiển thị những mẫu tin:",
+                opts: [
+                    "Nếu 1 trong hai điều kiện là true",
+                    "Cả hai điều kiện đều True",
+                    "Không có có điều kiện nào True",
+                    "A, B, C đều sai"],
+                ans: 1
+            },
+            {
+                m: 2, q:
+                    "Toán tử OR sẽ hiển thị những mẫu tin:",
+                opts: [
+                    "Nếu 1 trong hai điều kiện là true",
+                    "cả hai điều kiện đều True",
+                    "Không có có điều kiện nào True",
+                    "A, B, C đều sai"],
+                ans: 0
+            },
+            {
+                m: 2, q:
+                    "Lệnh nào sau đây dùng để xóa những mẫu tin có Tên là Peter trong bảng Persons",
+                opts: [
+                    "DELETE ROW Tên='' FROM Persons",
+                    "DELETE Tên='Peter' FROM Persons",
+                    "DELETE FROM Persons WHERE Tên = 'Peter'",
+                    "A, B, C đều đúng"],
+                ans: 2
+            },
+            {
+                m: 2, q:
+                    "Từ khóa nào dùng đề sắp xếp bộ dữ liệu kết quả:",
+                opts: [
+                    "ORDER",
+                    "ORDER BY",
+                    "SORT",
+                    "SORT BY"],
+                ans: 1
+            },
+            {
+                m: 2, q:
+                    "Câu lệnh SQL nào dùng để thêm dòng dữ liệu mới vào một bảng?",
+                opts: [
+                    "ADD RECORD",
+                    "INSERT INTO",
+                    "ADD NEW",
+                    "INSERT NEW"],
+                ans: 1
+            },
+            {
+                m: 2, q:
+                    "Câu lệnh nào sau đây chọn tất cả các cột của bảng Persons?",
+                opts: [
+                    "SELECT *.Persons",
+                    "SELECT Persons",
+                    "SELECT * FROM Persons",
+                    "SELECT [all] FROM Persons"],
+                ans: 2
+            },
+            {
+                m: 2, q:
+                    "Câu lệnh nào sau đây chọn tất cả các mẫu tin của bảng Persons có cột Tên là Peter?",
+                opts: [
+                    "SELECT * FROM Persons WHERE Tên LIKE 'Peter'",
+                    "SELECT [all] FROM Persons WHERE Tên LIKE 'Peter'",
+                    "SELECT * FROM Persons WHERE Tên='Peter'",
+                    "SELECT [all] FROM Persons WHERE Tên='Peter'"],
+                ans: 2
+            },
+            {
+                m: 2, q:
+                    "Câu lệnh nào sau đây chọn tất cả các mẫu tin của bảng Persons có cột Tên là Trâm và cột Họ là Nguyễn?",
+                opts: [
+                    "SELECT FROM Persons WHERE Tên='Trâm' AND Họ='Nguyễn'",
+                    "SELECT Tên='Trâm', Họ='Nguyễn' FROM Persons",
+                    "SELECT * FROM Persons WHERE Tên LIKE 'Trâm' AND Họ LIKE 'Nguyễn'",
+                    "A, B, C đều đúng"],
+                ans: 0
+            },
+            {
+                m: 2, q:
+                    "Câu lệnh nào chỉ chọn 70% các hàng trong bảng xếp theo giảm dần?",
+                opts: [
+                    "SELECT TOP 70 * FROM NHANVIEN ORDER BY ID DESC",
+                    "SELECT TOP 70 PERCENT * FROM NHANVIEN ORDER BY ID DESC",
+                    "SELECT TOP 70 PERCENT FROM NHANVIEN ORDER BY ID DESC",
+                    "SELECT TOP 70 PERCENT * FROM NHANVIEN ORDER BY ID ASC"],
+                ans: 1
+            },
+            {
+                m: 2, q:
+                    "Câu lệnh nào sau đây dùng để chọn tất cả các hàng có cột Tên là Nguyen và cột Quốc tịch là VietNam?",
+                opts: [
+                    "SELECT TOP ALL FROM NHANVIEN WHERE Tên='Nguyen' AND Quốc tịch='VietNam'",
+                    "SELECT ALL FROM NHANVIEN WHERE Tên='Nguyen' AND Quốc tịch='VietNam'",
+                    "SELECT *.* FROM NHANVIEN WHERE Tên='Nguyen' AND Quốc tịch='VietNam'",
+                    "SELECT * FROM NHANVIEN WHERE Tên='Nguyen' AND Quốc tịch='VietNam'"],
+                ans: 3
+            },
+            {
+                m: 2, q:
+                    "Câu lệnh nào dùng để chọn tất cả giá trị các hàng và cột với Tên là Nguyen HOẶC cột Quê quán là ThaiBinh?",
+                opts: [
+                    "SELECT Tên.*, Quê quán.* FROM NHANVIEN WHERE Tên='Nguyen' OR Quê quán='ThaiBinh'",
+                    "SELECT *.* FROM NHANVIEN WHERE Tên='Nguyen'; OR Quê quán='ThaiBinh'",
+                    "SELECT * FROM NHANVIEN WHERE Tên='Nguyen' OR Quê quán='ThaiBinh'",
+                    "SELECT ALL FROM NHANVIEN WHERE Tên='Nguyen' OR Quê quán='ThaiBinh'"],
+                ans: 2
+            },
+            {
+                m: 2, q:
+                    "Câu lệnh nào dùng để xóa các Nhân viên có cột Tên là Lan VÀ cột Quê quán là Hà Nội?",
+                opts: [
+                    "DELETE * FROM NHANVIEN WHERE (Tên='Lan' AND Quê quán='Hà Nội')",
+                    "DELETE ALL FROM NHANVIEN WHERE (Tên='Lan' AND Quê quán='Hà Nội')",
+                    "DELETE *.* FROM NHANVIEN WHERE (Tên='Lan' AND Quê quán='Hà Nội')",
+                    "DELETE FROM NHANVIEN WHERE (Tên='Lan' AND Quê quán='Hà Nội')"],
+                ans: 0
+            },
+            {
+                m: 2, q:
+                    "Trong database Sales có bảng Khachhang và bảng Hoadon. Mỗi một hoá đơn chỉ bán cho một khách hàng, và mỗi một khách hàng có thể không có hoặc có nhiều hoá đơn. Nên chọn các cột làm khóa chính và khoá ngoại trong các bảng như thế nào?",
+                opts: [
+                    "Trong bảng Khachhang chọn khoá chính là Mã hóa đơn (MaHD). Trong bảng Hoadon chọn khoá chính là Mã khách hàng (MaKH)",
+                    "Trong bảng Khachhang chọn khoá chính là Mã khách hàng (MaKH). Trong bảng Hoadon chọn khoá chính là Mã khách hàng (MaKH).",
+                    "Trong bảng Khachhang chọn khoá chính là Mã khách hàng (MaKH). Trong bảng Hoadon chọn khoá ngoại là Mã hoa don (MaHD)",
+                    "Trong bảng Khachhang chọn khoá chính là Mã khách hàng (MaKH). Trong bảng Hoadon chọn khoá ngoại là Mã khách hàng (MaKH)"],
+                ans: 3
+            },
+            {
+                m: 2, q:
+                    "Database Diagrams là gì?",
+                opts: [
+                    "Mô hình thể hiện sự quan hệ giữa các bảng",
+                    "Mô hình thể hiện sự quan hệ giữa các khung nhìn",
+                    "Mô hình thể hiện sự quan hệ giữa các hàm",
+                    "Mô hình các bảng dữ liệu"],
+                ans: 0
+            },
+            {
+                m: 2, q:
+                    "Câu lệnh SQL nào để trích xuất dữ liệu từ Database?",
+                opts: [
+                    "Open",
+                    "Extract",
+                    "Select",
+                    "Query"],
+                ans: 2
+            },
+            {
+                m: 2, q:
+                    "Chọn hàm sử dụng được cho các cột có dữ liệu số hoặc chuỗi?",
+                opts: [
+                    "Sum",
+                    "Count",
+                    "Avg",
+                    "Max"],
+                ans: 1
+            },
+            {
+                m: 2, q:
+                    "Kiểu dữ liệu nào không được sử dụng trong SQL Server?",
+                opts: [
+                    "Char",
+                    "Nchar",
+                    "AutoNumber",
+                    "Nvarchar"],
+                ans: 2
+            },
+            {
+                m: 2, q:
+                    "Muốn hiển thị những người được trả lương cao nhất trong tất cả các phòng ban, phải sử dụng câu lệnh nào trong Query?",
+                opts: [
+                    "Order by",
+                    "IN",
+                    "Having",
+                    "Union"],
+                ans: 2
+            },
+            {
+                m: 2, q:
+                    "Thứ tự đúng trong câu lệnh SELECT là:",
+                opts: [
+                    "SELECT, FROM, GROUP BY HAVING, WHERE, ORDER BY",
+                    "SELECT, FROM, GROUP BY HAVING, ORDER BY",
+                    "SELECT, FROM, WHERE, GROUP BY HAVING, ORDER BY",
+                    "SELECT, FROM, GROUP BY HAVING, ORDER BY"],
+                ans: 2
+            },
+            {
+                m: 2, q:
+                    "Các bước chính để tạo CSDL là:",
+                opts: [
+                    "Tạo bảng; Chọn khóa chính cho bảng; Đặt tên bảng và lưu cấu trúc bảng; Tạo liên kết bảng",
+                    "Tạo bảng; Chọn khóa chính cho bảng; Đặt tên bảng và lưu cấu trúc bảng",
+                    "Tạo bảng; Chọn khóa chính cho bảng; Lưu cấu trúc bảng; Tạo liên kết bảng; cập nhật và khai thác CSDL",
+                    "Tạo bảng; Chọn khóa chính cho bảng; Đặt tên bảng; Tạo liên kết bảng"],
+                ans: 0
+            },
+            {
+                m: 2, q:
+                    "Phép chọn được thực hiện sau mệnh đề nào?",
+                opts: [
+                    "GROUP BY",
+                    "WHERE",
+                    "SELECT",
+                    "FROM"],
+                ans: 2
+            },
+            {
+                m: 2, q:
+                    "Các phép toán gộp nhóm được sử dụng sau mệnh đề:",
+                opts: [
+                    "SELECT",
+                    "FROM",
+                    "WHERE",
+                    "GROUP BY"],
+                ans: 3
+            },
+            {
+                m: 2, q:
+                    "Cho quan hệ R gồm các thuộc tính: K# mã thuê bao, TB tên thuê bao, SDT số điện thoại, DC điạ chỉ.Chọn câu đúng sau đây khi tính tổng có bao nhiêu thuê bao có địa chỉ trên đường Trương Công Định?",
+                opts: [
+                    "SELECT * FROM R",
+                    "SELECT * FROM R GROUP BY TB HAVING DC = 'Trương Công Định'",
+                    "SELECT COUNT(*) FROM R WHERE DC = 'Trương Công Định'",
+                    "SELECT * FROM R WHERE DC = 'Trương Công Định'"],
+                ans: 2
+            },
+            {
+                m: 2, q:
+                    "Khi xóa 1 dòng dữ liệu trên quan hệ nếu không dùng mệnh đề WHERE sẽ xảy ra trường hợp nào?",
+                opts: [
+                    "Dòng dữ liệu đó sẽ được xóa",
+                    "Dòng dữ liệu đó còn nguyên",
+                    "Tất cả các dữ liệu khác trừ dòng đó sẽ được xóa",
+                    "Tất cả dữ liệu bị xóa"],
+                ans: 3
+            },
+            {
+                m: 2, q:
+                    "Cấu trúc của toán tử Between để kiểm tra dữ liệu trong một miền từ 3000 đến 4000, có cú pháp là:",
+                opts: [
+                    "Between 3000 And 4000",
+                    "Between '3000''4000'",
+                    "Betweenand 3000,4000",
+                    "Between 3000 OR 4000"],
+                ans: 0
+            },
+            {
+                m: 2, q:
+                    "Câu lệnh DROP TABLE là:",
+                opts: [
+                    "Xóa cơ sở dữ liệu",
+                    "Xóa quan hệ (Bảng)",
+                    "Xóa thuộc tính",
+                    "Xóa một thuộc tính và quan hệ"],
+                ans: 1
+            },
+            {
+                m: 2, q:
+                    "Khẳng định nào sau đây là đúng?",
+                opts: [
+                    "CREATE TABLE để tạo quan hệ",
+                    "CREATE TABLE để tạo các thuộc tính.",
+                    "CREATE TABLE để mô tả quan hệ và các thuộc tính",
+                    "CREATE TABLE để mô tả các phụ thuộc hàm."],
+                ans: 0
+            },
+            {
+                m: 2, q:
+                    "Cho các bảng như sau:SANPHAM (MASP,TENSP, DVT)HOADON (SOHD, NGHD, MAKH, MANV, TRIGIA)CTHD (SOHD,MASP,SL). Tìm các số hóa đơn đã mua sản phẩm có mã số \"MH01\" hoặc \"MH02\"?",
+                opts: [
+                    "SELECT SOHD FROM CTHD WHERE MASP NOT IN ('MH01','MH02') GROUP BY SOHD",
+                    "SELECT SOHD FROM SANPHAM WHERE MASP IN ('MH01','MH02') GROUP BY SOHD",
+                    "SELECT SOHD FROM CTHD WHERE MASP('MH01','MH02') GROUP BY SOHD",
+                    "SELECT SOHD FROM CTHD WHERE MASP IN('MH01','MH02') GROUP BY SOHD"],
+                ans: 3
+            },
+            {
+                m: 2, q:
+                    "Lệnh cấp phát quyền trong SQL Server là:",
+                opts: [
+                    "Giant",
+                    "Grant",
+                    "Revoke",
+                    "Privileges"],
+                ans: 1
+            },
+            {
+                m: 2, q:
+                    "Lệnh thu hồi quyền trên đối tượng CSDL là:",
+                opts: [
+                    "Giant",
+                    "Grant",
+                    "Revoke",
+                    "Privileges"],
+                ans: 2
+            },
+            {
+                m: 2, q:
+                    "Để không cho phép nguoidung thực hiện lệnh Create table trên CSDL ta sử dụng lệnh nào?",
+                opts: [
+                    "Grant create table from nguoidung",
+                    "Revoke create table from nguoidung",
+                    "Revoke create table where nguoidung not null",
+                    "Grant create table where nguoidung not null"],
+                ans: 1
+            },
+            {
+                m: 2, q:
+                    "Nêu cách sao lưu cơ sở dữ liệu?",
+                opts: [
+                    "Click trên CSDL, Right Click/ All Tasks / Backup Database/OK",
+                    "Click trên CSDL, Management/ Backup Database",
+                    "Click trên CSDL, Right Click/ All Tasks / Backup Device/OK",
+                    "Click trên CSDL, Right Click/ All Tasks /OK"],
+                ans: 0
+            },
+            {
+                m: 2, q:
+                    "Bảo mật dữ liệu trong SQL được thực hiện dựa trên những khái niệm nào?",
+                opts: [
+                    "Databaseuser",
+                    "Database objects",
+                    "Privileges",
+                    "A, B, C đều đúng"],
+                ans: 3
+            },
+            {
+                m: 2, q:
+                    "Lệnh nào cấp phát quyền tạo bảng và khung nhìn cho người dùng có tên là giamdoc?",
+                opts: [
+                    "GRANT CREATE TABLE, CREATE VIEW TO Giamdoc",
+                    "CREATE FUNCTION TO Giamdoc",
+                    "CREATE PROCEDURE TABLE TO Giamdoc",
+                    "CREATE PROCEDURE VIEW TO Giamdoc"],
+                ans: 0
+            },
+            {
+                m: 2, q:
+                    "Câu lệnh Rovoke có tác dụng gì?",
+                opts: [
+                    "Thu hồi quyền đã cấp phát cho người dùng trên các đối tượng CSDL",
+                    "Thu hồi quyền thực thi các câu lệnh trên cơ sở dữ liệu đã cấp phát cho người dùng",
+                    "A, B đều đúng",
+                    "A, B đều sai"],
+                ans: 2
+            },
+            {
+                m: 2, q:
+                    "Lệnh thu hồi quyền thực thi lệnh INSERT trên bảng LOP đối với người dùng SINHVIEN là:",
+                opts: [
+                    "REVOKE INSERT ON lop FROM sinhvien",
+                    "REVOKE sinhvien INSERT ON lop",
+                    "REVOKE INSERT TO lop ON Sinhvien",
+                    "REVOKE INSERT TO lop FROM sinhvien"],
+                ans: 0
+            },
+            {
+                m: 2, q:
+                    "Để đọc được hồ sơ thiết kế cơ sở dữ liệu, phải:",
+                opts: [
+                    "Nắm rõ các quy tắc để đọc hồ sơ",
+                    "Nắm rõ các ký hiệu và quy định",
+                    "Biết cách thiết kế cơ sở dữ liệu",
+                    "Nắm rõ phần mềm thiết kế cơ sở dữ liệu"],
+                ans: 1
+            },
+            {
+                m: 2, q:
+                    "Thiết kế cơ sở dữ liệu và lập trình cần thực hiện như thế nào?",
+                opts: [
+                    "Không liên quan đến nhau",
+                    "Cần lập trình và thiết kế giao diện trước",
+                    "Thiết kế cơ sở dữ liệu chuẩn trước sau đó lập trình",
+                    "Có thể làm việc song song"],
+                ans: 2
+            },
+            {
+                m: 2, q:
+                    "Khả năng bảo mật cơ sở dữ liệu với những chức năng?",
+                opts: [
+                    "Cấp phát quyền sử dụng các câu lệnh, các đối tượng cơ sở dữ liệu đối với người dùng.",
+                    "Thu hồi (huỷ bỏ) quyền của người dùng.",
+                    "A, B đều sai",
+                    "A, B đều đúng"],
+                ans: 3
+            },
+            {
+                m: 2, q:
+                    "Là đối tượng sử dụng cơ sở dữ liệu, thực thi các thao tác trên cơ sở dữ liệu như tạo bảng, truy xuất dữ liệu là định nghĩa về:",
+                opts: [
+                    "Người dùng cơ sở dữ liệu",
+                    "Người quản trị cơ sở dữ liệu",
+                    "Người thiết kế cơ sở dữ liệu",
+                    "A, B, C đều đúng"],
+                ans: 0
+            },
+            {
+                m: 2, q:
+                    "Đặc quyền (Privileges) được hiểu là:",
+                opts: [
+                    "Là tập những bảng được cấp phát cho người dùng trên các đối tượng cơ sở dữ liệu",
+                    "Là tập những thao tác được cấp phát cho người dùng trên các đối tượng cơ sở dữ liệu",
+                    "Là tập những người dùng được cấp phát cho người dùng trên các đối tượng cơ sở dữ liệu",
+                    "Là tập những cơ sở dữ liệu hệ thống được cấp phát cho người dùng trên các đối tượng cơ sở dữ liệu"],
+                ans: 1
+            },
+            {
+                m: 2, q:
+                    "Lệnh nào để cấp phát quyền cho người sử dụng trên các đối tượng cơ sở dữ liệu hoặc quyền sử dụng các câu lệnh SQL trong cơ sở dữ liệu?",
+                opts: [
+                    "PRIVILEGES",
+                    "REVOKE",
+                    "GRANT",
+                    "EXECUTE"],
+                ans: 2
+            },
+            {
+                m: 2, q:
+                    "Lệnh nào để thu hồi quyền cho người sử dụng?",
+                opts: [
+                    "PRIVILEGES",
+                    "REVOKE",
+                    "GRANT",
+                    "EXECUTE"],
+                ans: 1
+            },
+            {
+                m: 2, q:
+                    "Để cấp phát đầy đủ quyền cho người dùng ta dùng câu lệnh?",
+                opts: [
+                    "GRANT ALL",
+                    "GRANT ALL PRIVILEGES",
+                    "Một câu lệnh khác",
+                    "A, B đều đúng"],
+                ans: 3
+            },
+            {
+                m: 2, q:
+                    "Câu lệnh sau CREATE PROCEDURE dùng để tạo gì?",
+                opts: [
+                    "Tạo hàm",
+                    "Tạo thủ tục",
+                    "Tạo cơ sở dữ liệu",
+                    "Tạo khung nhìn"],
+                ans: 1
+            },
+            {
+                m: 2, q:
+                    "Cho câu lệnh: GRANT CREATE TABLE, CREATE VIEW TO thuchanh. Xác định user được cấp quyền ở trên?",
+                opts: [
+                    "grant",
+                    "thuchanh",
+                    "create",
+                    "to"],
+                ans: 1
+            },
+            {
+                m: 2, q:
+                    "Kiểu dữ liệu REAL, FLOAT, BIT, INT kiểu dữ liệu nào có giá trị lớn nhất?",
+                opts: [
+                    "REAL",
+                    "FLOAT",
+                    "BIT",
+                    "INT"],
+                ans: 0
+            },
+            {
+                m: 2, q:
+                    "Đối tượng nào tự có khi tạo mới một Database",
+                opts: [
+                    "Primary Key",
+                    "Foreign",
+                    "Table",
+                    "System Tables"],
+                ans: 3
+            },
+            {
+                m: 2, q:
+                    "Windows Authentication và SQL Server Authentication cái nào sẽ đăng nhập bằng quyền của Windows?",
+                opts: [
+                    "Windows Authentication",
+                    "SQL Server Authentication",
+                    "Cả 2 quyền",
+                    "Không có quyền nào cả"],
+                ans: 0
+            },
+            {
+                m: 2, q:
+                    "Hệ quản trị cơ sở dữ liệu là một phần mềm chuyên dụng có nhiệm vụ:",
+                opts: [
+                    "Hỗ trợ việc lưu trữ, truy xuất dữ liệu",
+                    "Hỗ trợ việc lưu trữ, truy xuất cơ sở dữ liệu",
+                    "Hỗ trợ việc lưu trữ, truy xuất và quản trị cơ sở dữ liệu",
+                    "Hỗ trợ việc lưu trữ, truy xuất và quản trị dữ liệu"],
+                ans: 2
+            },
+            {
+                m: 2, q:
+                    "Phát biểu nào sau đây là đúng?",
+                opts: [
+                    "Hệ quản trị CSDL do CSDL và hệ CSDL tạo thành",
+                    "CSDL do hệ quản trị CSDL và hệ CSDL tạo thành",
+                    "CSDL tạo nên hệ quản trị CSDL và hệ CSDL",
+                    "Hệ CSDL do hệ quản trị CSDL và CSDL tạo thành"],
+                ans: 3
+            },
+            {
+                m: 2, q:
+                    "SQL không cung cấp khả năng nào sau đây?",
+                opts: [
+                    "Định nghĩa cơ sở dữ liệu",
+                    "Truy xuất và thao tác dữ liệu",
+                    "Điều khiển truy cập",
+                    "Đảm bảo toàn vẹn dữ liệu"],
+                ans: 0
+            },
+            {
+                m: 2, q:
+                    "Hệ quản trị CSDL SYSTEM-R ra đời vào thời gian nào?",
+                opts: [
+                    "1975 - 1976",
+                    "1976",
+                    "1978 - 1979",
+                    "1986"],
+                ans: 0
+            },
+            {
+                m: 2, q:
+                    "Thuộc tính (trường) khóa chính là:",
+                opts: [
+                    "Foreign Key",
+                    "Unique Key",
+                    "Primary Key",
+                    "Single Key"],
+                ans: 2
+            },
+            {
+                m: 2, q:
+                    "Câu nào trong các câu dưới đây sai khi nói về hệ CSDL cá nhân?",
+                opts: [
+                    "Người dùng đóng vai trò là người quản trị CSDL",
+                    "Tính an toàn của hệ CSDL cá nhân rất cao",
+                    "Hệ CSDL cá nhân được lưu trữ trên một máy",
+                    "Hệ CSDL chỉ cho phép 1 người dùng tại một thời điểm"],
+                ans: 1
+            },
+            {
+                m: 2, q:
+                    "Tiêu chí nào sau đây thường được dùng để chọn khóa chính?",
+                opts: [
+                    "Khóa có ít thuộc tính nhất",
+                    "Không chứa các thuộc tính thay đổi theo thời gian",
+                    "Khóa bất kì",
+                    "Khóa chỉ có một thuộc tính"],
+                ans: 0
+            },
+            {
+                m: 2, q:
+                    "Câu nào sai trong các câu dưới đây?",
+                opts: [
+                    "Mỗi bảng có ít nhất một khóa",
+                    "Nên chọn khóa chính là khóa có ít thuộc tính nhất",
+                    "Trong một bảng có thể có nhiều khóa chính",
+                    "Việc xác định khóa phụ thuộc vào quan hệ logic của các dữ liệu chứ không phụ thuộc vào giá trị các dữ liệu"],
+                ans: 2
+            },
+            {
+                m: 2, q:
+                    "Hệ thống máy tính Client/Server có mấy mô hình kiến trúc dựa trên cấu hình phân tán truy nhập dữ liệu",
+                opts: [
+                    "3",
+                    "4",
+                    "5",
+                    "6"],
+                ans: 2
+            },
+            {
+                m: 2, q:
+                    "Trong hệ thống Client/Server, mô hình có chương trình ứng dụng, phần mềm CSDL và CSDL nằm trên cùng một nơi là mô hình nào?",
+                opts: [
+                    "Mô hình phân tán",
+                    "Mô hình File/Server",
+                    "Mô hình Client/Server",
+                    "Mô hình tập trung"],
+                ans: 3
+            },
+            {
+                m: 2, q:
+                    "Trong hệ thống Client/Server, mô hình có chương trình ứng dụng, phần mềm CSDL nằm trên cùng một nơi là mô hình nào?",
+                opts: [
+                    "Mô hình phân tán",
+                    "Mô hình File/Server",
+                    "Mô hình Client/Server",
+                    "Mô hình tập trung"],
+                ans: 1
+            },
+            {
+                m: 2, q:
+                    "Trong hệ thống Client/Server, mô hình có chương trình ứng dụng và phần mềm CSDL không nằm trên cùng một nơi là mô hình nào?",
+                opts: [
+                    "Mô hình phân tán",
+                    "Mô hình File/Server",
+                    "Mô hình Client/Server",
+                    "Mô hình tập trung"],
+                ans: 2
+            },
+            {
+                m: 2, q:
+                    "Dữ liệu và chương trình ứng dụng trong một CSDL phải đảm bảo tính chất nào?",
+                opts: [
+                    "Thống nhất",
+                    "Độc lập",
+                    "Nhất quán",
+                    "A, B, C đều sai"],
+                ans: 1
+            },
+            {
+                m: 2, q:
+                    "Câu nào trong các câu dưới đây sai khi nói về hệ CSDL Client/Server?",
+                opts: [
+                    "Trong kiến trúc khách-chủ, các thành phần (của hệ QTCSDL) tương tác với nhau tạo nên hệ thống gồm thành phần yêu cầu tài nguyên và thành phần cấp tài nguyên",
+                    "Hai thành phần yêu cầu tài nguyên và thành phần cấp tài nguyên phải cài đặt trên cùng một máy tính",
+                    "Thành phần cấp tài nguyên thường được cài đặt tại một máy chủ trên mạng (cục bộ)",
+                    "Thành phần yêu cầu tài nguyên có thể cài đặt tại nhiều máy khác (máy khách) trên mạng"],
+                ans: 1
+            },
+            {
+                m: 2, q:
+                    "Trong hệ thống Client/Server, mô hình phân tán có:",
+                opts: [
+                    "CSDL và chương trình ứng dụng trên cùng một nơi",
+                    "CSDL nằm ở nhiều nơi khác nhau",
+                    "CSDL và phần mềm CSDL trên cùng một nơi",
+                    "Phần mềm CSDL nằm ở nhiều nơi khác nhau"],
+                ans: 1
+            },
+            {
+                m: 2, q:
+                    "Theo kiến trúc ANSI-PARC, một CSDL có mấy mức biểu diễn?",
+                opts: [
+                    "2",
+                    "3",
+                    "4",
+                    "5"],
+                ans: 1
+            },
+            {
+                m: 2, q:
+                    "Adminstrator là người làm việc ở mức nào trong kiến trúc ANSI-PARC?",
+                opts: [
+                    "Mức vật lý (mức trong)",
+                    "Mức quan niệm",
+                    "Mức cao",
+                    "Mức thực hiện"],
+                ans: 0
+            },
+            {
+                m: 2, q:
+                    "Tên gọi của mô hình CSDL tập trung là gì?",
+                opts: [
+                    "Centralized database model",
+                    "File/Server database model",
+                    "Client/Server database model",
+                    "DB extract process SQL serving model"],
+                ans: 0
+            },
+            {
+                m: 2, q:
+                    "Tên gọi của mô hình CSDL theo kiểu client-server là gì?",
+                opts: [
+                    "Centralized database model",
+                    "File/Server database model",
+                    "Client/Server database model",
+                    "DB extract process SQL serving model"],
+                ans: 2
+            },
+            {
+                m: 2, q:
+                    "Tên gọi của mô hình phân tán là gì?",
+                opts: [
+                    "Distributed database model",
+                    "DB extract process SQL serving model",
+                    "Centralized database model",
+                    "File/Server database model"],
+                ans: 0
+            },
+            {
+                m: 2, q:
+                    "Trong mô hình CSDL Client/Server, các thành phần xử lý ứng dụng trên hệ thống Client đưa ra yêu cầu cho:",
+                opts: [
+                    "Phần mềm Cơ sở dữ liệu trên máy Server",
+                    "Phần mềm Cơ sở dữ liệu trên máy Client",
+                    "Cơ sở dữ liệu trên máy Client",
+                    "Cơ sở dữ liệu trên máy Server"],
+                ans: 1
+            },
+            {
+                m: 2, q:
+                    "Câu nào trong các câu dưới đây sai khi nói về hệ CSDL Client/Server? (câu 226)",
+                opts: [
+                    "Trong kiến trúc Client/Server, các thành phần (của hệ QTCSDL) tương tác với nhau tạo nên hệ thống gồm thành phần yêu cầu tài nguyên và thành phần cấp tài nguyên",
+                    "Hai thành phần yêu cầu tài nguyên và thành phần cấp tài nguyên phải cài đặt trên cùng một máy tính",
+                    "Thành phần cấp tài nguyên thường được cài đặt tại một máy chủ trên mạng (cục bộ)",
+                    "Thành phần yêu cầu tài nguyên có thể cài đặt tại nhiều máy khác (máy khách) trên mạng"],
+                ans: 1
+            },
+            {
+                m: 2, q:
+                    "Công cụ nào dùng để tạo CSDL sử dụng chuột và giao diện trực quan?",
+                opts: [
+                    "Enterprise Manager",
+                    "Enterprise Managerment",
+                    "Query Analyzer",
+                    "Query Manager"],
+                ans: 0
+            },
+            {
+                m: 2, q:
+                    "Công cụ nào dùng để hỗ trợ người dùng trong việc sử dụng SQL Server?",
+                opts: [
+                    "Enterprise Manager",
+                    "Books Online",
+                    "Query Analyzer",
+                    "Client/Server Network"],
+                ans: 1
+            },
+            {
+                m: 2, q:
+                    "Trong các tên gọi sau, đâu là tên của Hệ quản trị CSDL?",
+                opts: [
+                    "MS SQL",
+                    "MS SQL Server",
+                    "SQL",
+                    "T-SQL"],
+                ans: 1
+            },
+            {
+                m: 2, q:
+                    "SQL là viết tắt của từ nào?",
+                opts: [
+                    "Struct Query Language",
+                    "Structure Query Language",
+                    "Structured Query Language",
+                    "Structures Query Language"],
+                ans: 2
+            },
+            {
+                m: 2, q:
+                    "Trong hệ thống Client/Server có bao nhiêu mô hình?",
+                opts: [
+                    "3",
+                    "5",
+                    "7",
+                    "9"],
+                ans: 1
+            },
+            {
+                m: 2, q:
+                    "Yêu cầu hệ điều hành tối thiểu để cài đặt SQL Server là:",
+                opts: [
+                    "Windows 2000 Service Pack 4",
+                    "Windows Vista",
+                    "Windows 7",
+                    "Windows 8"],
+                ans: 0
+            },
+            {
+                m: 2, q:
+                    "Ổ cứng còn trống tối thiểu là bao nhiêu để cài SQL Server?",
+                opts: [
+                    "225 MB",
+                    "325 MB",
+                    "425 MB",
+                    "525 MB"],
+                ans: 3
+            },
+            {
+                m: 2, q:
+                    "Một máy chủ có tối đa bao nhiêu hệ quản trị CSDL SQL Server?",
+                opts: [
+                    "1",
+                    "2",
+                    "3",
+                    "Tùy thuộc vào cấu hình máy"],
+                ans: 0
+            },
+            {
+                m: 2, q:
+                    "Máy chứa các CSDL, cung cấp chức năng phục vụ tổ chức và quản lý CSDL là máy nào?",
+                opts: [
+                    "Server",
+                    "Client",
+                    "PC",
+                    "Server và Client"],
+                ans: 0
+            },
+            {
+                m: 2, q:
+                    "Máy chứa phần mềm cho phép người dùng giao tiếp CSDL trên Server là máy nào?",
+                opts: [
+                    "Server",
+                    "Client",
+                    "PC",
+                    "Server và Client"],
+                ans: 1
+            },
+            {
+                m: 2, q:
+                    "Phiên bản thấp nhất của SQL Server là?",
+                opts: [
+                    "Standard",
+                    "Personal",
+                    "Express",
+                    "Develop"],
+                ans: 2
+            },
+            {
+                m: 2, q:
+                    "Để cài SQL server, máy tính phải có:",
+                opts: [
+                    "Windows Installer 3.1 trở lên",
+                    "Net framework 2.0",
+                    "Cần cả 2 chương trình",
+                    "Không yêu cầu hỗ trợ"],
+                ans: 3
+            },
+            {
+                m: 2, q:
+                    "Trong SQL, Chế độ chứng thực user nào chỉ sử dụng chứng thực của Windows?",
+                opts: [
+                    "Windows Authentication Mode",
+                    "SQL Server Authenication Mode",
+                    "Windows Authentication Mode và SQL Server Mode",
+                    "Windows Authentication Mode và Mixed Mode"],
+                ans: 0
+            },
+            {
+                m: 2, q:
+                    "Trong SQL, Chế độ chứng thực user nào sử dụng chứng thực của SQL Server?",
+                opts: [
+                    "Windows Authentication Mode",
+                    "SQL Server Authenication Mode",
+                    "Windows Authentication Mode và Mixed Mode",
+                    "Mixed Mode và SQL Server Mode"],
+                ans: 3
+            },
+            {
+                m: 2, q:
+                    "Phép chiếu được thực hiện sau mệnh đề nào trong SELECT - FROM - WHERE?",
+                opts: [
+                    "FROM",
+                    "SELECT",
+                    "GROUP BY HAVING",
+                    "WHERE"],
+                ans: 3
+            },
+            {
+                m: 2, q:
+                    "Rắc rối nào xảy ra khi tích chọn Allow Null cho primary key?",
+                opts: [
+                    "Khó xác định tính duy nhất của các hàng",
+                    "Khó xác định tính duy nhất của các cột",
+                    "Khó kết nối các bảng",
+                    "Khó xác định foreign key"],
+                ans: 0
+            },
+            {
+                m: 2, q:
+                    "Trong SQL, ngôn ngữ thao tác dữ liệu DML bao gồm các chức năng:",
+                opts: [
+                    "Truy vấn thông tin, thêm, sửa, xoá dữ liệu",
+                    "Bảo mật và quyền truy nhập.",
+                    "Tạo, sửa và xóa cấu trúc quan hệ.",
+                    "Tạo, sửa và xóa cấu trúc và đảm bảo bảo mật và quyền truy nhập"],
+                ans: 0
+            },
+            {
+                m: 2, q:
+                    "Phép chọn SELECT là phép toán:",
+                opts: [
+                    "Tạo một quan hệ mới từ quan hệ nguồn.",
+                    "Tạo một quan hệ mới, thoả mãn một tân từ xác định.",
+                    "Tạo một nhóm các phụ thuộc.",
+                    "Tạo một quan hệ mới, các bộ được rút ra một cách duy nhất từ quan hệ nguồn"],
+                ans: 2
+            },
+            {
+                m: 2, q:
+                    "Mệnh đề GROUP BY ... HAVING dùng để:",
+                opts: [
+                    "Phân hoạch các bộ của một quan hệ thành các nhóm riêng biệt",
+                    "Áp dụng các phép toán gộp nhóm.",
+                    "Phân hoạch các bộ của một quan hệ thành các nhóm riêng biệt và áp dụng các phép toán gộp cho các nhóm.",
+                    "Tách các quan hệ thành các quan hệ con, không tổn thất thông tin"],
+                ans: 3
+            },
+            {
+                m: 2, q:
+                    "Kết nối bằng nhau các quan hệ theo thuộc tính là:",
+                opts: [
+                    "Thực hiện tích Đề Các và phép chọn",
+                    "Thực hiện tích Đề Các và phép chiếu",
+                    "Thực hiện phép chiếu và chia",
+                    "Thực hiện phép chiếu và phép chọn"],
+                ans: 0
+            },
+            {
+                m: 2, q:
+                    "Trong SQL, ngôn ngữ định nghĩa dữ liệu bao gồm các chức năng:",
+                opts: [
+                    "Tạo, sửa và xóa cấu trúc quan hệ. Bảo mật và quyền truy nhập.",
+                    "Bảo mật và quyền truy nhập.",
+                    "Tạo, sửa và xóa cấu trúc quan hệ. Thêm cột, sửa cột và xoá cột",
+                    "Tạo, sửa và xóa các bộ quan hệ. Bảo mật và quyền truy nhập."],
+                ans: 3
+            },
+            {
+                m: 2, q:
+                    "Trong SQL, ngôn ngữ thao tác dữ liệu DML bao gồm các chức năng: (câu 248)",
+                opts: [
+                    "Truy vấn thông tin, thêm, sửa, xoá dữ liệu",
+                    "Bảo mật và quyền truy nhập.",
+                    "Tạo, sửa và xóa cấu trúc quan hệ.",
+                    "Tạo, sửa và xóa cấu trúc và đảm bảo bảo mật và quyền truy nhập."],
+                ans: 2
+            },
+            {
+                m: 2, q:
+                    "Các bước thực hiện đúng trong câu lệnh SELECT:",
+                opts: [
+                    "Tích Đề các, phép toán chọn, theo nhóm, sắp xếp và phép chiếu",
+                    "Tích Đề các, phép toán chọn, theo nhóm, phép chiếu và sắp xếp",
+                    "Phép toán chọn, tích Đề các, theo nhóm, sắp xếp và phép chiếu",
+                    "Phép toán chọn, tích Đề các, theo nhóm, phép chiếu và sắp xếp"],
+                ans: 0
+            },
+            {
+                m: 2, q:
+                    "Phép toán tập hợp trong mệnh đề WHERE bao gồm:",
+                opts: [
+                    "Các phép số học và các phép so sánh",
+                    "Các phép đại số quan hệ",
+                    "Các phép so sánh.",
+                    "Biểu thức đại số"],
+                ans: 1
+            },
+        ];
+
+
+        const LETTERS = ['A', 'B', 'C', 'D'];
+        let questions = []; // shuffled
+
+        function shuffle(arr) {
+            const a = [...arr];
+            for (let i = a.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [a[i], a[j]] = [a[j], a[i]];
+            }
+            return a;
+        }
+
+        function buildQuestions() {
+            questions = shuffle(RAW_QUESTIONS).map((q, idx) => {
+                // shuffle options but track correct answer
+                const indices = shuffle([0, 1, 2, 3]);
+                const newOpts = indices.map(i => q.opts[i]);
+                const newAns = indices.indexOf(q.ans);
+                return { ...q, opts: newOpts, ans: newAns, origIdx: idx, userAns: null, checked: false };
+            });
+        }
+
+        function renderAll() {
+            const container = document.getElementById('quiz-container');
+            container.innerHTML = '';
+            let curModule = null;
+            questions.forEach((q, i) => {
+                if (q.m !== curModule) {
+                    curModule = q.m;
+                    const h = document.createElement('div');
+                    h.className = 'module-heading';
+                    h.textContent = curModule === 1 ? 'Module 01 – Hệ Quản Trị CSDL Access' : 'Module 02 – Hệ Quản Trị CSDL SQL Server';
+                    container.appendChild(h);
+                }
+                container.appendChild(makeCard(q, i));
+            });
+            updateProgress();
+        }
+
+        function makeCard(q, i) {
+            const card = document.createElement('div');
+            card.className = 'q-card';
+            card.dataset.idx = i;
+
+            const hdr = document.createElement('div');
+            hdr.className = 'q-header';
+            hdr.innerHTML = `<span class="q-num">Câu ${i + 1}</span><span class="q-text">${q.q}</span><span class="q-status" id="qs-${i}"></span>`;
+            card.appendChild(hdr);
+
+            const opts = document.createElement('div');
+            opts.className = 'q-options';
+            q.opts.forEach((opt, oi) => {
+                const o = document.createElement('div');
+                o.className = 'opt';
+                o.dataset.oi = oi;
+                o.innerHTML = `<span class="opt-letter">${LETTERS[oi]}</span><span class="opt-text">${opt}</span>`;
+                o.onclick = () => selectOpt(i, oi);
+                opts.appendChild(o);
+            });
+            card.appendChild(opts);
+
+            const fb = document.createElement('div');
+            fb.className = 'q-feedback';
+            fb.id = `qfb-${i}`;
+            card.appendChild(fb);
+
+            return card;
+        }
+
+        function selectOpt(qi, oi) {
+            const q = questions[qi];
+            if (q.checked) return;
+            q.userAns = oi;
+            const card = document.querySelector(`.q-card[data-idx="${qi}"]`);
+            card.querySelectorAll('.opt').forEach((el, idx) => {
+                el.classList.toggle('selected', idx === oi);
+            });
+            updateProgress();
+            checkSingle(qi);
+        }
+
+        function checkSingle(qi) {
+            const q = questions[qi];
+            if (q.checked) return;
+            if (q.userAns === null) return;
+            q.checked = true;
+            const card = document.querySelector(`.q-card[data-idx="${qi}"]`);
+            const opts = card.querySelectorAll('.opt');
+            const fb = document.getElementById(`qfb-${qi}`);
+            opts.forEach((el, idx) => {
+                el.classList.add('disabled');
+                if (idx === q.ans) el.classList.add('correct');
+                else if (idx === q.userAns && q.userAns !== q.ans) el.classList.add('wrong');
+            });
+            const correct = q.userAns === q.ans;
+            card.classList.add(correct ? 'answered-correct' : 'answered-wrong');
+            fb.textContent = correct ? '✅ Chính xác!' : `❌ Sai! Đáp án đúng: ${LETTERS[q.ans]}. ${q.opts[q.ans]}`;
+            fb.className = 'q-feedback show ' + (correct ? 'correct' : 'wrong');
+            document.getElementById(`qs-${qi}`).textContent = correct ? '✅' : '❌';
+            updateScore();
+        }
+
+        function checkAll() {
+            let anyUnchecked = false;
+            questions.forEach((q, i) => {
+                if (!q.checked) {
+                    anyUnchecked = true;
+                    if (q.userAns !== null) {
+                        checkSingle(i);
+                    } else {
+                        // mark skipped
+                        const card = document.querySelector(`.q-card[data-idx="${i}"]`);
+                        if (!card.classList.contains('answered-correct') && !card.classList.contains('answered-wrong')) {
+                            card.classList.add('skipped');
+                            q.checked = true;
+                            const fb = document.getElementById(`qfb-${i}`);
+                            fb.textContent = `⚠️ Bỏ qua. Đáp án đúng: ${LETTERS[q.ans]}. ${q.opts[q.ans]}`;
+                            fb.className = 'q-feedback show wrong';
+                            document.getElementById(`qs-${i}`).textContent = '⚠️';
+                            const opts = card.querySelectorAll('.opt');
+                            opts.forEach((el, idx) => {
+                                el.classList.add('disabled');
+                                if (idx === q.ans) el.classList.add('show-correct');
+                            });
+                        }
+                    }
+                }
+            });
+            updateScore();
+            showResult();
+        }
+
+        function showResult() {
+            const correct = questions.filter(q => q.checked && q.userAns === q.ans).length;
+            const wrong = questions.filter(q => q.checked && q.userAns !== null && q.userAns !== q.ans).length;
+            const skip = questions.filter(q => q.checked && q.userAns === null).length;
+            const score = correct;
+            document.getElementById('rs-score').textContent = score;
+            document.getElementById('rs-correct').textContent = correct;
+            document.getElementById('rs-wrong').textContent = wrong;
+            document.getElementById('rs-skip').textContent = skip;
+            const pct = Math.round(correct / questions.length * 100);
+            document.getElementById('result-title').textContent = pct >= 50 ? `🎉 Đạt! ${pct}%` : `😞 Chưa đạt – ${pct}%`;
+            document.getElementById('result-sub').textContent = `Bạn làm đúng ${correct}/${questions.length} câu`;
+            const banner = document.getElementById('result-banner');
+            banner.classList.add('show');
+            banner.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        function updateScore() {
+            const score = questions.filter(q => q.checked && q.userAns === q.ans).length;
+            document.getElementById('cur-score').textContent = score;
+        }
+
+        function updateProgress() {
+            const answered = questions.filter(q => q.userAns !== null || q.checked).length;
+            const pct = (answered / questions.length * 100).toFixed(0);
+            document.getElementById('prog-bar').style.width = pct + '%';
+            document.getElementById('prog-text').textContent = `${answered} / ${questions.length} đã trả lời`;
+        }
+
+        function resetAll() {
+            buildQuestions();
+            document.getElementById('result-banner').classList.remove('show');
+            document.getElementById('cur-score').textContent = '0';
+            renderAll();
+        }
+
+        function filterCards(type, btn) {
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            document.querySelectorAll('.q-card').forEach(card => {
+                const idx = parseInt(card.dataset.idx);
+                const q = questions[idx];
+                if (type === 'all') { card.style.display = ''; return; }
+                if (type === 'unanswered') { card.style.display = (!q.checked && q.userAns === null) ? '' : 'none'; return; }
+                if (type === 'correct') { card.style.display = (q.checked && q.userAns === q.ans) ? '' : 'none'; return; }
+                if (type === 'wrong') { card.style.display = (q.checked && q.userAns !== q.ans) ? '' : 'none'; return; }
+            });
+        }
+
+        // INIT
+        buildQuestions();
+        renderAll();
+    </script>
+</body>
+
+</html>
