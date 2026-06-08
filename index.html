@@ -620,6 +620,10 @@
                 <div class="label">Tổng câu</div>
                 <div class="value" id="total-count">250</div>
             </div>
+            <div class="score-box" style="border-color: rgba(34,197,94,.4); min-width: 100px;">
+                <div class="label">⏱ Thời gian</div>
+                <div class="value" id="cur-timer" style="color: var(--green); font-size: 16px;">00:00:00</div>
+            </div>
             <div class="header-btns">
                 <button class="btn btn-primary" onclick="checkAll()">✅ Kiểm tra tất cả</button>
                 <button class="btn btn-danger" onclick="resetAll()">🔄 Làm mới</button>
@@ -662,6 +666,10 @@
                 <div class="result-stat rs-skip">
                     <div class="rs-val" id="rs-skip">0</div>
                     <div class="rs-label">Bỏ qua</div>
+                </div>
+                <div class="result-stat" style="border-color: rgba(34,197,94,.4);">
+                    <div class="rs-val" id="rs-time" style="color: var(--green); font-size: 22px;">00:00:00</div>
+                    <div class="rs-label">⏱ Thời gian làm</div>
                 </div>
             </div>
             <button class="btn btn-danger" style="margin-top:20px" onclick="resetAll()">🔄 Làm mới</button>
@@ -1940,10 +1948,10 @@
                 m: 2, q:
                     "Để cho phép một thuộc tính trong bảng được phép để trống khi nhập, ta dùng lệnh nào?",
                 opts: [
-                    "<tên thuộc tính> <kiểu dữ liệu> allow null",
-                    "<tên thuộc tính> <kiểu dữ liệu> not null",
-                    "<tên thuộc tính> <kiểu dữ liệu> null",
-                    "<tên thuộc tính> <kiểu dữ liệu>"],
+                    "'tên thuộc tính' 'kiểu dữ liệu' allow null",
+                    "'tên thuộc tính' 'kiểu dữ liệu' not null",
+                    "'tên thuộc tính' 'kiểu dữ liệu' null",
+                    "'tên thuộc tính' 'kiểu dữ liệu'"],
                 ans: 2
             },
             {
@@ -3180,6 +3188,7 @@
 
 
 
+
         ];
 
 
@@ -3423,9 +3432,57 @@
             });
         }
 
+        // TIMER
+        let timerStart = null;
+        let timerInterval = null;
+        let timerPaused = false;
+        let elapsed = 0;
+
+        function formatTime(seconds) {
+            const h = Math.floor(seconds / 3600);
+            const m = Math.floor((seconds % 3600) / 60);
+            const s = seconds % 60;
+            return [h, m, s].map(v => String(v).padStart(2, '0')).join(':');
+        }
+
+        function startTimer() {
+            timerStart = Date.now() - elapsed * 1000;
+            timerInterval = setInterval(() => {
+                elapsed = Math.floor((Date.now() - timerStart) / 1000);
+                document.getElementById('cur-timer').textContent = formatTime(elapsed);
+            }, 1000);
+        }
+
+        function stopTimer() {
+            clearInterval(timerInterval);
+        }
+
+        function resetTimer() {
+            stopTimer();
+            elapsed = 0;
+            document.getElementById('cur-timer').textContent = '00:00:00';
+            startTimer();
+        }
+
+        // Patch resetAll to also reset timer
+        const _origResetAll = resetAll;
+        window.resetAll = function () {
+            _origResetAll();
+            resetTimer();
+        };
+
+        // Patch showResult to show elapsed time
+        const _origShowResult = showResult;
+        window.showResult = function () {
+            _origShowResult();
+            stopTimer();
+            document.getElementById('rs-time').textContent = formatTime(elapsed);
+        };
+
         // INIT
         buildQuestions();
         renderAll();
+        startTimer();
     </script>
 </body>
 
