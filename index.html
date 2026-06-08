@@ -563,6 +563,100 @@
             border-radius: 99px;
         }
 
+        /* Q Navigation bar */
+        .q-nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 0 4px;
+            gap: 12px;
+        }
+        .q-nav-info {
+            font-size: 13px;
+            color: var(--muted);
+        }
+        .q-nav-info b { color: var(--accent); }
+        .q-nav-btns {
+            display: flex;
+            gap: 10px;
+        }
+        .q-nav-btns .btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        /* Scoreboard collapse/pin */
+        .score-board-wrap {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            align-items: flex-end;
+        }
+        .score-pin-bar {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            user-select: none;
+            padding: 4px 10px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            background: var(--surface2);
+            font-size: 12px;
+            color: var(--muted);
+            transition: all .15s;
+            width: fit-content;
+        }
+        .score-pin-bar:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+        .score-pin-bar.pinned {
+            border-color: var(--yellow);
+            color: var(--yellow);
+            background: rgba(245,158,11,.08);
+        }
+        .score-board {
+            overflow: hidden;
+            transition: max-height .3s ease, opacity .3s ease;
+            max-height: 200px;
+            opacity: 1;
+        }
+        .score-board.collapsed {
+            max-height: 0;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        /* Floating timer (when not pinned) */
+        .floating-timer {
+            position: fixed;
+            top: 14px;
+            right: 20px;
+            z-index: 300;
+            background: var(--surface2);
+            border: 1px solid rgba(34,197,94,.4);
+            border-radius: 10px;
+            padding: 6px 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,.3);
+            display: none;
+        }
+        .floating-timer .label {
+            font-size: 9px;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .floating-timer .value {
+            font-size: 15px;
+            font-weight: 700;
+            font-family: 'JetBrains Mono';
+            color: var(--green);
+        }
+
         @media (max-width: 600px) {
             header {
                 padding: 14px 14px;
@@ -590,43 +684,54 @@
 
 <body>
 
+    <div class="floating-timer" id="floating-timer">
+        <div class="label">⏱ Thời gian</div>
+        <div class="value" id="cur-timer-float">00:00:00</div>
+    </div>
+
     <header>
         <div>
             <div class="header-title">🎓 Trắc Nghiệm – Thực Hành Nâng Cao</div>
             <div class="header-sub">Module 01: Access &nbsp;|&nbsp; Module 02: SQL Server</div>
         </div>
-        <div class="score-board">
-            <div class="score-box">
-                <div class="label">Điểm</div>
-                <div class="value" id="cur-score">0</div>
+        <div class="score-board-wrap">
+            <div class="score-pin-bar" id="pin-bar" onclick="togglePin()">
+                <span id="pin-icon">📌</span>
+                <span id="pin-label">Ghim bảng điểm</span>
             </div>
-            <div class="score-box" style="border-color: rgba(239,68,68,.4);">
-                <div class="label">Câu sai</div>
-                <div class="value" id="cur-wrong" style="color: var(--red);">0</div>
-            </div>
-            <div class="score-box" style="border-color: rgba(245,158,11,.4);">
-                <div class="label">Chưa làm</div>
-                <div class="value" id="cur-revealed" style="color: var(--yellow);">0</div>
-            </div>
-            <div class="score-box" style="border-color: rgba(79,142,247,.4);">
-                <div class="label">Đã làm</div>
-                <div class="value" id="cur-done" style="color: var(--accent);">0</div>
-            </div>
-            <div class="score-box" style="border-color: rgba(245,158,11,.4);">
-                <div class="label">Còn lại</div>
-                <div class="value" id="cur-remain" style="color: var(--yellow);">250</div>
-            </div>
-            <div class="score-box total">
-                <div class="label">Tổng câu</div>
-                <div class="value" id="total-count">250</div>
-            </div>
-            <div class="score-box" style="border-color: rgba(34,197,94,.4); min-width: 100px;">
-                <div class="label">⏱ Thời gian</div>
-                <div class="value" id="cur-timer" style="color: var(--green); font-size: 16px;">00:00:00</div>
-            </div>
-            <div class="header-btns">
-                <button class="btn btn-primary" onclick="checkAll()">✅ Kiểm tra tất cả</button>
-                <button class="btn btn-danger" onclick="resetAll()">🔄 Làm mới</button>
+            <div class="score-board" id="score-board">
+                <div class="score-box">
+                    <div class="label">Điểm</div>
+                    <div class="value" id="cur-score">0</div>
+                </div>
+                <div class="score-box" style="border-color: rgba(239,68,68,.4);">
+                    <div class="label">Câu sai</div>
+                    <div class="value" id="cur-wrong" style="color: var(--red);">0</div>
+                </div>
+                <div class="score-box" style="border-color: rgba(245,158,11,.4);">
+                    <div class="label">Chưa làm</div>
+                    <div class="value" id="cur-revealed" style="color: var(--yellow);">0</div>
+                </div>
+                <div class="score-box" style="border-color: rgba(79,142,247,.4);">
+                    <div class="label">Đã làm</div>
+                    <div class="value" id="cur-done" style="color: var(--accent);">0</div>
+                </div>
+                <div class="score-box" style="border-color: rgba(245,158,11,.4);">
+                    <div class="label">Còn lại</div>
+                    <div class="value" id="cur-remain" style="color: var(--yellow);">250</div>
+                </div>
+                <div class="score-box total">
+                    <div class="label">Tổng câu</div>
+                    <div class="value" id="total-count">250</div>
+                </div>
+                <div class="score-box" style="border-color: rgba(34,197,94,.4); min-width: 100px;">
+                    <div class="label">⏱ Thời gian</div>
+                    <div class="value" id="cur-timer" style="color: var(--green); font-size: 16px;">00:00:00</div>
+                </div>
+                <div class="header-btns">
+                    <button class="btn btn-primary" onclick="checkAll()">✅ Kiểm tra tất cả</button>
+                    <button class="btn btn-danger" onclick="resetAll()">🔄 Làm mới</button>
+                </div>
             </div>
         </div>
     </header>
@@ -682,7 +787,7 @@
     <script>
         const RAW_QUESTIONS = [
             // ---- MODULE 01 ----
-           {
+          {
                 m: 1, q:
                     "Trong Access, Bảng là gì?",
                 opts: [
@@ -3189,6 +3294,7 @@
 
 
 
+
         ];
 
 
@@ -3214,21 +3320,46 @@
             });
         }
 
+        let currentQIdx = 0;
+
         function renderAll() {
+            currentQIdx = 0;
+            renderCurrentCard();
+            updateProgress();
+        }
+
+        function renderCurrentCard() {
             const container = document.getElementById('quiz-container');
             container.innerHTML = '';
-            let curModule = null;
-            questions.forEach((q, i) => {
-                if (q.m !== curModule) {
-                    curModule = q.m;
-                    const h = document.createElement('div');
-                    h.className = 'module-heading';
-                    h.textContent = curModule === 1 ? 'Module 01 – Hệ Quản Trị CSDL Access' : 'Module 02 – Hệ Quản Trị CSDL SQL Server';
-                    container.appendChild(h);
-                }
-                container.appendChild(makeCard(q, i));
-            });
-            updateProgress();
+            document.getElementById('result-banner').classList.remove('show');
+
+            if (currentQIdx >= questions.length) {
+                showResult();
+                return;
+            }
+
+            const q = questions[currentQIdx];
+            const i = currentQIdx;
+
+            // Module heading
+            const h = document.createElement('div');
+            h.className = 'module-heading';
+            h.textContent = q.m === 1 ? 'Module 01 – Hệ Quản Trị CSDL Access' : 'Module 02 – Hệ Quản Trị CSDL SQL Server';
+            container.appendChild(h);
+
+            container.appendChild(makeCard(q, i));
+
+            // Navigation bar
+            const nav = document.createElement('div');
+            nav.className = 'q-nav';
+            nav.innerHTML = `
+                <span class="q-nav-info">Câu <b>${i + 1}</b> / ${questions.length}</span>
+                <div class="q-nav-btns">
+                    ${i > 0 ? `<button class="btn btn-secondary" onclick="goPrev()">◀ Câu trước</button>` : ''}
+                    <button class="btn btn-primary" id="btn-next" onclick="goNext()" ${!q.checked ? 'disabled' : ''}>Câu tiếp ▶</button>
+                </div>
+            `;
+            container.appendChild(nav);
         }
 
         function makeCard(q, i) {
@@ -3272,6 +3403,24 @@
             return card;
         }
 
+        function goNext() {
+            if (currentQIdx < questions.length - 1) {
+                currentQIdx++;
+                renderCurrentCard();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            } else {
+                showResult();
+            }
+        }
+
+        function goPrev() {
+            if (currentQIdx > 0) {
+                currentQIdx--;
+                renderCurrentCard();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+
         function selectOpt(qi, oi) {
             const q = questions[qi];
             if (q.checked) return;
@@ -3303,35 +3452,28 @@
             fb.className = 'q-feedback show ' + (correct ? 'correct' : 'wrong');
             document.getElementById(`qs-${qi}`).textContent = correct ? '✅' : '❌';
             updateScore();
+            // Unlock "Câu tiếp" button
+            const btnNext = document.getElementById('btn-next');
+            if (btnNext) btnNext.disabled = false;
         }
 
         function checkAll() {
-            let anyUnchecked = false;
+            // Mark all unchecked questions
             questions.forEach((q, i) => {
                 if (!q.checked) {
-                    anyUnchecked = true;
                     if (q.userAns !== null) {
-                        checkSingle(i);
+                        q.checked = true;
+                        const correct = q.userAns === q.ans;
+                        q.answeredCorrect = correct;
                     } else {
-                        // mark skipped
-                        const card = document.querySelector(`.q-card[data-idx="${i}"]`);
-                        if (!card.classList.contains('answered-correct') && !card.classList.contains('answered-wrong')) {
-                            card.classList.add('skipped');
-                            q.checked = true;
-                            const fb = document.getElementById(`qfb-${i}`);
-                            fb.textContent = `⚠️ Bỏ qua. Đáp án đúng: ${LETTERS[q.ans]}. ${q.opts[q.ans]}`;
-                            fb.className = 'q-feedback show wrong';
-                            document.getElementById(`qs-${i}`).textContent = '⚠️';
-                            const opts = card.querySelectorAll('.opt');
-                            opts.forEach((el, idx) => {
-                                el.classList.add('disabled');
-                                if (idx === q.ans) el.classList.add('show-correct');
-                            });
-                        }
+                        q.checked = true;
+                        q.userAns = null;
+                        q.skipped = true;
                     }
                 }
             });
             updateScore();
+            updateProgress();
             showResult();
         }
 
@@ -3347,9 +3489,11 @@
             const pct = Math.round(correct / questions.length * 100);
             document.getElementById('result-title').textContent = pct >= 50 ? `🎉 Đạt! ${pct}%` : `😞 Chưa đạt – ${pct}%`;
             document.getElementById('result-sub').textContent = `Bạn làm đúng ${correct}/${questions.length} câu`;
+            // Hide quiz container, show result
+            document.getElementById('quiz-container').innerHTML = '';
             const banner = document.getElementById('result-banner');
             banner.classList.add('show');
-            banner.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         function updateScore() {
@@ -3372,6 +3516,7 @@
         }
 
         function resetAll() {
+            currentQIdx = 0;
             buildQuestions();
             document.getElementById('result-banner').classList.remove('show');
             document.getElementById('cur-score').textContent = '0';
@@ -3417,19 +3562,63 @@
 
             updateScore();
             updateProgress();
+            // Unlock "Câu tiếp" button
+            const btnNext = document.getElementById('btn-next');
+            if (btnNext) btnNext.disabled = false;
         }
 
         function filterCards(type, btn) {
             document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
-            document.querySelectorAll('.q-card').forEach(card => {
-                const idx = parseInt(card.dataset.idx);
-                const q = questions[idx];
-                if (type === 'all') { card.style.display = ''; return; }
-                if (type === 'unanswered') { card.style.display = (!q.checked && q.userAns === null) ? '' : 'none'; return; }
-                if (type === 'correct') { card.style.display = (q.checked && q.userAns === q.ans) ? '' : 'none'; return; }
-                if (type === 'wrong') { card.style.display = (q.checked && q.userAns !== q.ans) ? '' : 'none'; return; }
-            });
+            // In single-card mode, jump to first matching question
+            if (type === 'all') { currentQIdx = 0; }
+            else if (type === 'unanswered') {
+                const idx = questions.findIndex(q => !q.checked && q.userAns === null);
+                if (idx !== -1) currentQIdx = idx;
+            } else if (type === 'correct') {
+                const idx = questions.findIndex(q => q.checked && q.userAns === q.ans);
+                if (idx !== -1) currentQIdx = idx;
+            } else if (type === 'wrong') {
+                const idx = questions.findIndex(q => q.checked && q.userAns !== q.ans);
+                if (idx !== -1) currentQIdx = idx;
+            }
+            renderCurrentCard();
+        }
+
+        // PIN / COLLAPSE scoreboard
+        let isPinned = true;
+
+        function togglePin() {
+            isPinned = !isPinned;
+            const board = document.getElementById('score-board');
+            const bar = document.getElementById('pin-bar');
+            const icon = document.getElementById('pin-icon');
+            const label = document.getElementById('pin-label');
+            const floatTimer = document.getElementById('floating-timer');
+
+            if (isPinned) {
+                board.classList.remove('collapsed');
+                bar.classList.add('pinned');
+                icon.textContent = '📌';
+                label.textContent = 'Đã ghim';
+                floatTimer.style.display = 'none';
+            } else {
+                board.classList.add('collapsed');
+                bar.classList.remove('pinned');
+                icon.textContent = '📌';
+                label.textContent = 'Ghim bảng điểm';
+                floatTimer.style.display = 'flex';
+            }
+        }
+
+        // Sync floating timer
+        const _origStartTimer = startTimer;
+        const origFormatTime = formatTime;
+
+        function syncFloatTimer() {
+            const v = document.getElementById('cur-timer').textContent;
+            const ft = document.getElementById('cur-timer-float');
+            if (ft) ft.textContent = v;
         }
 
         // TIMER
@@ -3450,6 +3639,7 @@
             timerInterval = setInterval(() => {
                 elapsed = Math.floor((Date.now() - timerStart) / 1000);
                 document.getElementById('cur-timer').textContent = formatTime(elapsed);
+                syncFloatTimer();
             }, 1000);
         }
 
