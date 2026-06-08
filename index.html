@@ -604,6 +604,10 @@
                 <div class="label">Câu sai</div>
                 <div class="value" id="cur-wrong" style="color: var(--red);">0</div>
             </div>
+            <div class="score-box" style="border-color: rgba(245,158,11,.4);">
+                <div class="label">Chưa làm</div>
+                <div class="value" id="cur-revealed" style="color: var(--yellow);">0</div>
+            </div>
             <div class="score-box" style="border-color: rgba(79,142,247,.4);">
                 <div class="label">Đã làm</div>
                 <div class="value" id="cur-done" style="color: var(--accent);">0</div>
@@ -3175,6 +3179,7 @@
 
 
 
+
         ];
 
 
@@ -3341,8 +3346,10 @@
         function updateScore() {
             const score = questions.filter(q => q.checked && q.userAns === q.ans).length;
             const wrong = questions.filter(q => q.checked && q.userAns !== null && q.userAns !== q.ans).length;
+            const revealed = questions.filter(q => q.revealed).length;
             document.getElementById('cur-score').textContent = score;
             document.getElementById('cur-wrong').textContent = wrong;
+            document.getElementById('cur-revealed').textContent = revealed;
         }
 
         function updateProgress() {
@@ -3360,6 +3367,7 @@
             document.getElementById('result-banner').classList.remove('show');
             document.getElementById('cur-score').textContent = '0';
             document.getElementById('cur-wrong').textContent = '0';
+            document.getElementById('cur-revealed').textContent = '0';
             document.getElementById('cur-done').textContent = '0';
             document.getElementById('cur-remain').textContent = questions.length;
             renderAll();
@@ -3390,6 +3398,7 @@
 
             // Mark question as checked/skipped so it counts
             q.checked = true;
+            q.revealed = true;
             card.classList.add('skipped');
             document.getElementById(`qs-${qi}`).textContent = '💡';
 
