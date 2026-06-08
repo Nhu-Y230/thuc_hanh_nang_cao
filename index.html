@@ -604,6 +604,14 @@
                 <div class="label">Câu sai</div>
                 <div class="value" id="cur-wrong" style="color: var(--red);">0</div>
             </div>
+            <div class="score-box" style="border-color: rgba(79,142,247,.4);">
+                <div class="label">Đã làm</div>
+                <div class="value" id="cur-done" style="color: var(--accent);">0</div>
+            </div>
+            <div class="score-box" style="border-color: rgba(245,158,11,.4);">
+                <div class="label">Còn lại</div>
+                <div class="value" id="cur-remain" style="color: var(--yellow);">250</div>
+            </div>
             <div class="score-box total">
                 <div class="label">Tổng câu</div>
                 <div class="value" id="total-count">250</div>
@@ -3166,6 +3174,7 @@
             },
 
 
+
         ];
 
 
@@ -3338,15 +3347,21 @@
 
         function updateProgress() {
             const answered = questions.filter(q => q.userAns !== null || q.checked).length;
+            const remain = questions.length - answered;
             const pct = (answered / questions.length * 100).toFixed(0);
             document.getElementById('prog-bar').style.width = pct + '%';
             document.getElementById('prog-text').textContent = `${answered} / ${questions.length} đã trả lời`;
+            document.getElementById('cur-done').textContent = answered;
+            document.getElementById('cur-remain').textContent = remain;
         }
 
         function resetAll() {
             buildQuestions();
             document.getElementById('result-banner').classList.remove('show');
             document.getElementById('cur-score').textContent = '0';
+            document.getElementById('cur-wrong').textContent = '0';
+            document.getElementById('cur-done').textContent = '0';
+            document.getElementById('cur-remain').textContent = questions.length;
             renderAll();
         }
 
